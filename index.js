@@ -27,6 +27,11 @@ let searchPath = [];
 // input box
 let searchTargetInputFocus = false;
 
+// step button
+let stepText = 'step';
+let step = -1;
+let stepButtonClicked = false;
+
 function init() {
     // user input
     canvas.addEventListener('mousemove', function(event) {
@@ -47,11 +52,41 @@ function init() {
             } else {
                 searchTargetInputFocus = false;
             }
+            // check if step button was clicked
+            if (
+                mouseX >= margin &&
+                mouseX <= margin + fontSize * 5 &&
+                mouseY >= margin * 3 &&
+                mouseY <= (margin * 3) + (fontSize * 1.5)
+            ) {
+                stepButtonClicked = true;
+            }
+        }
+    });
+
+    canvas.addEventListener('mouseup', function(event) {
+        if (event.button === 0) { // release left click
+            if (stepButtonClicked) {
+                stepButtonClicked = false;
+                if (stepText == 'step') {
+                    step += 1;
+                    if (step == searchPath.length - 1) {
+                        stepText = 'reset';
+                    }
+                } else {
+                    // stepText == 'reset'
+                    stepText = 'step';
+                    step = -1;
+                }
+            }
         }
     });
 
     canvas.addEventListener('keydown', function(event) {
         if (searchTargetInputFocus) {
+            // reset search
+            stepText = 'step';
+            step = -1;
             if (event.keyCode >= 48 && event.keyCode <= 57) {
                 // 0-9 is keycode 48-57
                 searchTarget = parseInt(searchTarget.toString() + (event.keyCode - 48).toString(), 10);
@@ -88,6 +123,24 @@ function display() {
     ctx.strokeRect(margin, margin + fontSize, fontSize * 5, fontSize * 1.5);
     ctx.fillText(searchTarget.toString(), margin + fontSize / 2, (margin + fontSize) + (fontSize * 1.5) - (fontSize * 0.5)); // rectY + rectHeight - 1/2 font
 
+    // step button
+    ctx.fillStyle = stepButtonClicked ? '#9a9a9a' : '#aaaaaa'; // medium dark gray : gray
+    ctx.fillRect(margin, margin * 3, fontSize * 5, fontSize * 1.5);
+    ctx.strokeStyle = stepButtonClicked ? '#666666' : '#eeeeee'; // dark gray: light gray
+    ctx.beginPath();
+    ctx.moveTo(margin + fontSize * 5, margin * 3);
+    ctx.lineTo(margin, margin * 3);
+    ctx.lineTo(margin, (margin * 3) + (fontSize * 1.5));
+    ctx.stroke();
+    ctx.strokeStyle = stepButtonClicked ? '#9a9a9a' : '#666666'; // medium gray : dark gray
+    ctx.beginPath();
+    ctx.moveTo(margin, (margin * 3) + (fontSize * 1.5));
+    ctx.lineTo(margin + fontSize * 5, (margin * 3) + (fontSize * 1.5));
+    ctx.lineTo(margin + fontSize * 5, margin * 3);
+    ctx.stroke();
+    ctx.fillStyle = '#000000'; // reset to black
+    ctx.fillText(stepText, margin + fontSize / 2, (margin * 3) + (fontSize * 1.5) - (fontSize * 0.5)); // rectY + rectHeight - 1/2 font
+
     // draw the number field
     const y = 300;
     const spacing = 40;
@@ -98,9 +151,7 @@ function display() {
     }
 
     // draw the search path
-    let lineOriginX = margin + searchPath[0] * spacing; // center number is first
-    let lineOriginY = 100;
-    for (let i = 0; i < searchPath.length; i++) {
+    function drawSearchPath(i) {
         // searchPath is an array of indexes
         const x = margin + searchPath[i] * spacing; // x of number
         // draw line path
@@ -128,6 +179,14 @@ function display() {
         ctx.arc(x, y - (fontSize/2), fontSize, 0, 2 * Math.PI);
         // this centers the circle on the font
         ctx.stroke();
+    }
+
+    let lineOriginX = margin + searchPath[0] * spacing; // center number is first
+    let lineOriginY = 100;
+    if (step != -1) {
+        for (let i = 0; i <= step; i++) {
+            drawSearchPath(i);
+        }
     }
 }
 
