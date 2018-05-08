@@ -135,4 +135,65 @@ describe('binarySearchTree', function() {
             });
         });
     });
+    describe('search()', function() {
+        /*
+        [0, 1, 2, 3, 4, 5, 6]
+             3
+           /   \
+          1     5
+         / \   / \
+        0   2 4   6
+        */
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: {
+                    k: 0,
+                    v: 0,
+                    l: null,
+                    r: null
+                },
+                r: {
+                    k: 2,
+                    v: 2,
+                    l: null,
+                    r: null
+                }
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {
+                    k: 4,
+                    v: 4,
+                    l: null,
+                    r: null
+                },
+                r: {
+                    k: 6,
+                    v: 6,
+                    l: null,
+                    r: null
+                }
+            }
+        };
+        it('returns the value of the found key: ', function() {
+            chai.expect(bst.search(2, tree1)).equal(2);
+        });
+        it('finds when key is the root node: ', function() {
+            chai.expect(bst.search(3, tree1)).equal(3);
+        });
+        it('finds when search goes left and right: ', function() {
+            chai.expect(bst.search(2, tree1)).equal(2);
+        });
+        it('finds when search goes right and left: ', function() {
+            chai.expect(bst.search(4, tree1)).equal(4);
+        });
+        it('returns null when key was not found: ', function() {
+            chai.expect(bst.search(7, tree1)).null;
+        });
+    });
 });

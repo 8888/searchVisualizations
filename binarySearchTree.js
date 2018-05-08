@@ -42,4 +42,37 @@ const insert = (key, value, tree) => {
     }
 };
 
-export {node, insert};
+const search = (key, tree) => {
+    // finds the key in the provided binary search tree
+    // returns the value stored
+    // returns null if the key was not found
+    // uses recursion with each lower node being passed as tree
+    if (key === tree.k) {
+        // key found, return value
+        return tree.v;
+    } else if (key < tree.k) {
+        // move down the tree to the left
+        if (tree.l) {
+            // left node exists
+            // recursively call search w/ left node
+            return search(key, tree.l);
+        } else {
+            // there is no left node
+            // key does not exist in tree
+            return null;
+        }
+    } else {
+        // move down the tree to the right
+        if (tree.r) {
+            // right node exists
+            // recursively call search w/ right node
+            return search(key, tree.r);
+        } else {
+            // there is no right node
+            // key does not exist in tree
+            return null;
+        }
+    }
+};
+
+export {node, insert, search};
