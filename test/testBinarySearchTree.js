@@ -196,4 +196,46 @@ describe('binarySearchTree', function() {
             chai.expect(bst.search(7, tree1)).null;
         });
     });
+    describe('createFromArray()', function() {
+        const arr1 = [5, 3, 7];
+        const arr2 = [0, 1, 2, 3];
+        const arr3 = [5, 3, 7, 3];
+        it('values are indexes from array: ', function() {
+            chai.expect(bst.createFromArray(arr1)).eql({
+                k: 5,
+                v: 0,
+                l: {k: 3, v: 1, l: null, r: null},
+                r: {k: 7, v: 2, l: null, r: null}
+            });
+        });
+        it('values are inserted in index order, not balanced: ', function() {
+            chai.expect(bst.createFromArray(arr2)).eql({
+                k: 0,
+                v: 0,
+                l: null,
+                r: {
+                    k: 1,
+                    v: 1,
+                    l: null,
+                    r: {
+                        k: 2,
+                        v: 2,
+                        l: null,
+                        r: {k: 3, v: 3, l: null, r: null}
+                    }
+                }
+            });
+        });
+        it('duplicate items are overwritten, last occurance is used: ', function() {
+            chai.expect(bst.createFromArray(arr3)).eql({
+                k: 5,
+                v: 0,
+                l: {k: 3, v: 3, l: null, r: null},
+                r: {k: 7, v: 2, l: null, r: null}
+            });
+        });
+        it('empty array returns null: ', function() {
+            chai.expect(bst.createFromArray([])).null;
+        });
+    });
 });

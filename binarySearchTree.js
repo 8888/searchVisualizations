@@ -75,4 +75,21 @@ const search = (key, tree) => {
     }
 };
 
-export {node, insert, search};
+const createFromArray = (arr) => {
+    // receives an array of keys
+    // creates a binary search tree
+    // the values are the index of each item in the array
+    // returns the unbalanced bst
+    if (!arr.length) {
+        return null;
+    }
+    // reduce array to a bst or simply a node
+    return arr.reduce(
+        // pass a function that uses insert()
+        (tree, key, index) => { return insert(key, index, tree); },
+        // and a starting value for the tree
+        node(arr[0], 0)
+    );
+};
+
+export {node, insert, search, createFromArray};
