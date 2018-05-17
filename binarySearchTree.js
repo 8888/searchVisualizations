@@ -42,6 +42,18 @@ const insert = (key, value, tree) => {
     }
 };
 
+const remove = (key, tree, successor) => {
+    // remove the key from the provided binary search tree
+    // successor is a boolean
+    // true = in-order successor
+    // false = in-order predecessor
+    // this determines how removing nodes with two children are handled
+    // the removed node will be replaced with the successor or predecessor
+    // successor = right subtree's left most child
+    // predecessor = left subtree's right most child
+    // returns the new tree without that node
+};
+
 const search = (key, tree) => {
     // finds the key in the provided binary search tree
     // returns the value stored
@@ -92,4 +104,4 @@ const createFromArray = (arr) => {
     );
 };
 
-export {node, insert, search, createFromArray};
+export {node, insert, remove, search, createFromArray};
