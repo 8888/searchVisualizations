@@ -137,6 +137,82 @@ describe('binarySearchTree', function() {
         });
     });
 
+    describe('findMin()', function() {
+        /*
+        [1, 2, 3, 4, 5, 6]
+             3
+           /   \
+          1     5
+           \   / \
+            2 4   6
+        */
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: null,
+                r: {k: 2, v: 2, l: null, r: null}
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: {k: 6, v: 6, l: null, r: null}
+            }
+        };
+        it('min is deepest: ', function() {
+            chai.expect(bst.findMin(tree1.r)).eql({k: 4, v: 4, l: null, r: null});
+        });
+        it('min is not deepest: ', function() {
+            chai.expect(bst.findMin(tree1)).eql({
+                k: 1,
+                v: 1,
+                l: null,
+                r: {k: 2, v: 2, l: null, r: null}
+            });
+        });
+    });
+
+    describe('findMax()', function() {
+        /*
+        [1, 2, 3, 4, 5,]
+             3
+           /   \
+          1     5
+         / \   /
+        0   2 4
+        */
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: {k: 0, v: 0, l: null, r: null},
+                r: {k: 2, v: 2, l: null, r: null}
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: null
+            }
+        };
+        it('max is deepest: ', function() {
+            chai.expect(bst.findMax(tree1.l)).eql({k: 2, v: 2, l: null, r: null});
+        });
+        it('max is not deepest: ', function() {
+            chai.expect(bst.findMax(tree1)).eql({
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: null
+            });
+        });
+    });
+
     describe('remove()', function() {
         /*
         [0, 1, 2, 3, 4, 5]
@@ -269,6 +345,31 @@ describe('binarySearchTree', function() {
                     r: {k: 2, v: 2, l: null, r: null}
                 },
                 r: {k: 4, v: 4, l: null, r: null}
+            });
+        });
+        it('returns original tree if key not found: ', function() {
+            chai.expect(bst.remove(8, tree1, true)).eql(tree1);
+        });
+        it('returns null if a single node tree has that node deleted: ', function() {
+            chai.expect(bst.remove(0, {k: 0, v: 0, l: null, r: null})).null;
+        });
+        it('does not mutate original object: ', function() {
+            bst.remove(2, tree1, true);
+            chai.expect(tree1).eql({
+                k: 3,
+                v: 3,
+                l: {
+                    k: 1,
+                    v: 1,
+                    l: {k: 0, v: 0, l: null, r: null},
+                    r: {k: 2, v: 2, l: null, r: null}
+                },
+                r: {
+                    k: 5,
+                    v: 5,
+                    l: {k: 4, v: 4, l: null, r: null},
+                    r: null
+                }
             });
         });
         describe('remove a node with two children', function() {

@@ -42,6 +42,26 @@ const insert = (key, value, tree) => {
     }
 };
 
+const findMin = (tree) => {
+    // returns the node with the lowest key
+    // this will be the left most node, not the deepest
+    if (tree.l) {
+        return findMin(tree.l);
+    } else {
+        return tree;
+    }
+};
+
+const findMax = (tree) => {
+    // returns the node with the highest key
+    // this will be the right most node, not the deepest
+    if (tree.r) {
+        return findMax(tree.r);
+    } else {
+        return tree;
+    }
+};
+
 const remove = (key, tree, successor) => {
     // remove the key from the provided binary search tree
     // successor is a boolean
@@ -52,6 +72,77 @@ const remove = (key, tree, successor) => {
     // successor = right subtree's left most child
     // predecessor = left subtree's right most child
     // returns the new tree without that node
+    // uses remove recursively to construct a new tree
+    // returns a node each time while calling remove on the next subtree
+    if (tree.k === key) {
+        // delete this node
+        if (tree.l && tree.r) {
+            // node has 2 children
+            if (successor) {
+                // find the replacement successor node
+                // replace this nodes key and value
+                // remove replacement from the subtree
+                const replacement = findMin(tree.r);
+                return node(
+                    replacement.k,
+                    replacement.v,
+                    tree.l,
+                    remove(replacement.k, tree.r, successor)
+                );
+            } else {
+                // find the replacement predecessor node
+                // replace this nodes key and value
+                // remove replacement from the subtree
+                const replacement = findMax(tree.l);
+                return node(
+                    replacement.k,
+                    replacement.v,
+                    remove(replacement.k, tree.l, successor),
+                    tree.r
+                );
+            }
+        } else if (tree.l) {
+            // node has only a left child
+            // replace with left child node
+            return tree.l;
+        } else if (tree.r) {
+            // node has only a right child
+            // replace with right child node
+            return tree.r;
+        } else {
+            // node has no children
+            // replace node with null
+            return null;
+        }
+    } else if (key < tree.k) {
+        // move down the tree to the left
+        if (tree.l) {
+            // recursively call remove onto the left subtree looking for key
+            return node(
+                tree.v,
+                tree.k,
+                remove(key, tree.l, successor),
+                tree.r
+            );
+        } else {
+            // key doesnt exist in tree
+            return tree;
+        }
+    } else {
+        // move down the tree to the right
+        if (tree.r) {
+            // recursively call remove onto the right subtree looking for key
+            return node(
+                tree.v,
+                tree.k,
+                tree.l,
+                remove(key, tree.r, successor)
+            );
+        } else {
+            // key doesnt exist in tree
+            return tree;
+        }
+    }
 };
 
 const search = (key, tree) => {
@@ -104,4 +195,4 @@ const createFromArray = (arr) => {
     );
 };
 
-export {node, insert, remove, search, createFromArray};
+export {node, insert, findMin, findMax, remove, search, createFromArray};
