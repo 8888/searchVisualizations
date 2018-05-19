@@ -178,6 +178,22 @@ const search = (key, tree) => {
     }
 };
 
+const traverse = (tree, accum = []) => {
+    // traverse a bst in order
+    // accum is the array accumulater
+    // this is passed recursively and not mutated
+    // starts with furthest left node, working to the right
+    // returns an ordered array of
+    // [{k: k, v: v}, {k: k, v: v}, ...]
+    if (tree === null) {
+        return accum;
+    }
+    const accumLeft = traverse(tree.l, accum);
+    const accumNode = accumLeft.concat({k: tree.k, v: tree.v});
+    const accumRight = traverse(tree.r, accumNode);
+    return accumRight;
+};
+
 const createFromArray = (arr) => {
     // receives an array of keys
     // creates a binary search tree
@@ -195,4 +211,13 @@ const createFromArray = (arr) => {
     );
 };
 
-export {node, insert, findMin, findMax, remove, search, createFromArray};
+export {
+    node,
+    insert,
+    findMin,
+    findMax,
+    remove,
+    search,
+    traverse,
+    createFromArray
+};

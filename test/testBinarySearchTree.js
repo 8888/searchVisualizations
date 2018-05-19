@@ -660,6 +660,71 @@ describe('binarySearchTree', function() {
         });
     });
 
+    describe('traverse()', function() {
+        /*
+        [0, 1, 2, 3, 4, 5, 6]
+             3
+           /   \
+          1     5
+         / \   / \
+        0   2 4   6
+        */
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: {k: 0, v: 0, l: null, r: null},
+                r: {k: 2, v: 2, l: null, r: null}
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: {k: 6, v: 6, l: null, r: null}
+            }
+        };
+        /*
+        [0, 1, 2, 3]
+        0
+         \
+          1
+           \
+            2
+             \
+              3
+        */
+        const tree2 = {
+            k: 0, v: 0, l: null, r: {
+                k: 1, v: 1, l: null, r: {
+                    k: 2, v: 2, l: null, r: {
+                        k: 3, v: 3, l: null, r: null
+                    }
+                }
+            }
+        };
+        it('traverses in order on balanced tree: ', function() {
+            chai.expect(bst.traverse(tree1)).eql([
+                {k: 0, v: 0},
+                {k: 1, v: 1},
+                {k: 2, v: 2},
+                {k: 3, v: 3},
+                {k: 4, v: 4},
+                {k: 5, v: 5},
+                {k: 6, v: 6}
+            ]);
+        });
+        it('traverses in order on unbalanced tree: ', function() {
+            chai.expect(bst.traverse(tree2)).eql([
+                {k: 0, v: 0},
+                {k: 1, v: 1},
+                {k: 2, v: 2},
+                {k: 3, v: 3}
+            ]);
+        });
+    });
+
     describe('createFromArray()', function() {
         const arr1 = [5, 3, 7];
         const arr2 = [0, 1, 2, 3];
