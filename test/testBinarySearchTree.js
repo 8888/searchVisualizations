@@ -823,4 +823,40 @@ describe('binarySearchTree', function() {
             chai.expect(bst.createFromArray([])).null;
         });
     });
+
+    describe('balance()', function() {
+        /*
+        [0, 1, 2]
+        0
+         \
+          1
+           \
+            2
+        */
+        const tree1 = {
+            k: 0, v: 0, l: null, r: {
+                k: 1, v: 1, l: null, r: {
+                    k: 2, v: 2, l: null, r: null
+                }
+            }
+        };
+        it('balances tree correctly: ', function() {
+            chai.expect(bst.balance(tree1)).eql({
+                k: 1,
+                v: 1,
+                l: {k: 0, v: 0, l: null, r: null},
+                r: {k: 2, v: 2, l: null, r: null}
+            });
+        });
+        it('does not mutate original tree: ', function() {
+            bst.balance(tree1);
+            chai.expect(tree1).eql({
+                k: 0, v: 0, l: null, r: {
+                    k: 1, v: 1, l: null, r: {
+                        k: 2, v: 2, l: null, r: null
+                    }
+                }
+            });
+        });
+    });
 });

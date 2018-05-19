@@ -230,6 +230,13 @@ const createFromArray = (arr) => {
     );
 };
 
+const balance = (tree) => {
+    // wrapper around traverse() and createFromOrderedArray()
+    // takes a bst and returns a new, balanced bst
+    const arr = traverse(tree);
+    return createFromOrderedArray(arr);
+};
+
 export {
     node,
     insert,
@@ -239,5 +246,6 @@ export {
     search,
     traverse,
     createFromOrderedArray,
-    createFromArray
+    createFromArray,
+    balance
 };
