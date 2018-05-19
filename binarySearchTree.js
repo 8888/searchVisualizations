@@ -194,6 +194,25 @@ const traverse = (tree, accum = []) => {
     return accumRight;
 };
 
+const createFromOrderedArray = (arr) => {
+    // creates a balanced binary search tree
+    // form an array of key value pairs
+    // arr = [{k: k, v: v}, {k: k, v: v}, ...]
+    // find middle element
+    if (!arr.length) {
+        return null;
+    }
+    const mid = Math.round((0 + arr.length -1) / 2);
+    return node(
+        arr[mid].k,
+        arr[mid].v,
+        // use left portion of array for left sub tree
+        createFromOrderedArray(arr.slice(0, mid)),
+        // use right portion of array for right sub tree
+        createFromOrderedArray(arr.slice(mid + 1, arr.length))
+    );
+};
+
 const createFromArray = (arr) => {
     // receives an array of keys
     // creates a binary search tree
@@ -219,5 +238,6 @@ export {
     remove,
     search,
     traverse,
+    createFromOrderedArray,
     createFromArray
 };

@@ -725,6 +725,62 @@ describe('binarySearchTree', function() {
         });
     });
 
+    describe('createFromOrderedArray()', function() {
+        /*
+        [0, 1, 2, 3, 4, 5, 6]
+             3
+           /   \
+          1     5
+         / \   / \
+        0   2 4   6
+        */
+        const arr1 = [
+            {k: 0, v: 0},
+            {k: 1, v: 1},
+            {k: 2, v: 2},
+            {k: 3, v: 3},
+            {k: 4, v: 4},
+            {k: 5, v: 5},
+            {k: 6, v: 6}
+        ];
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: {k: 0, v: 0, l: null, r: null},
+                r: {k: 2, v: 2, l: null, r: null}
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: {k: 6, v: 6, l: null, r: null}
+            }
+        };
+        const arr2 = [
+            {k: 0, v: 'red'},
+            {k: 1, v: 'orange'},
+            {k: 2, v: 'yellow'}
+        ];
+        const tree2 = {
+            k: 1,
+            v: 'orange',
+            l: {k: 0, v: 'red', l: null, r: null},
+            r: {k: 2, v: 'yellow', l: null, r: null}
+        };
+        it('returned tree is balanced: ', function() {
+            chai.expect(bst.createFromOrderedArray(arr1)).eql(tree1);
+        });
+        it('empty array returns null: ', function() {
+            chai.expect(bst.createFromOrderedArray([])).null;
+        });
+        it('values do not impact order: ', function() {
+            chai.expect(bst.createFromOrderedArray(arr2)).eql(tree2);
+        });
+    });
+
     describe('createFromArray()', function() {
         const arr1 = [5, 3, 7];
         const arr2 = [0, 1, 2, 3];
