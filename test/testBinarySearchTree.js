@@ -824,6 +824,64 @@ describe('binarySearchTree', function() {
         });
     });
 
+    describe('height()', function() {
+        /*
+        [0, 1, 2, 3, 4, 5, 6]
+             3
+           /   \
+          1     5
+         / \   / \
+        0   2 4   6
+        */
+        const tree1 = {
+            k: 3,
+            v: 3,
+            l: {
+                k: 1,
+                v: 1,
+                l: {k: 0, v: 0, l: null, r: null},
+                r: {k: 2, v: 2, l: null, r: null}
+            },
+            r: {
+                k: 5,
+                v: 5,
+                l: {k: 4, v: 4, l: null, r: null},
+                r: {k: 6, v: 6, l: null, r: null}
+            }
+        };
+        /*
+        [0, 1, 2, 3]
+        0
+         \
+          1
+           \
+            2
+             \
+              3
+        */
+        const tree2 = {
+            k: 0, v: 0, l: null, r: {
+                k: 1, v: 1, l: null, r: {
+                    k: 2, v: 2, l: null, r: {
+                        k: 3, v: 3, l: null, r: null
+                    }
+                }
+            }
+        };
+        it('balanced tree: ', function() {
+            chai.expect(bst.height(tree1)).equal(2);
+        });
+        it('unbalanced tree: ', function() {
+            chai.expect(bst.height(tree2)).equal(3);
+        });
+        it('root only: ', function() {
+            chai.expect(bst.height({k: 0, v: 0, l: null, r: null})).equal(0);
+        });
+        it('null returns -1: ', function() {
+            chai.expect(bst.height(null)).equal(-1);
+        });
+    });
+
     describe('balance()', function() {
         /*
         [0, 1, 2]

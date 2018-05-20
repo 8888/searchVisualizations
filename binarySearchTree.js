@@ -230,6 +230,24 @@ const createFromArray = (arr) => {
     );
 };
 
+const height = (tree) => {
+    // returns the height of the bst
+    // root is height 0
+    if (tree === null) {
+        // base case since root = 0 and null = -1
+        return -1;
+    }
+    // find heights of both subtrees
+    const left = height(tree.l);
+    const right = height(tree.r);
+    // return deepest +1 for this layer
+    if (left > right) {
+        return left + 1;
+    } else {
+        return right + 1;
+    }
+};
+
 const balance = (tree) => {
     // wrapper around traverse() and createFromOrderedArray()
     // takes a bst and returns a new, balanced bst
@@ -247,5 +265,6 @@ export {
     traverse,
     createFromOrderedArray,
     createFromArray,
+    height,
     balance
 };
