@@ -1,6 +1,7 @@
 'use strict';
 
 import { binarySearch } from './search.js';
+import * as bst from './binarySearchTree.js';
 
 const canvas = document.getElementById('canvasElement');
 canvas.tabIndex = 0;
@@ -23,6 +24,7 @@ let mouseY = null;
 const searchField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
 let searchTarget = 88;
 let searchPath = [];
+const searchTree = bst.balance(bst.createFromArray(searchField));
 
 // input box
 let searchTargetInputFocus = false;
@@ -106,6 +108,10 @@ function update(delta) {
 }
 
 function display() {
+    // all drawing is currently very inefficient
+    // portions are redrawn every frame even when they don't change
+    // functions are redefined every frame
+    // this is purely prototype at this point just to see how it will look
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.fillStyle = '#000000'; // black
@@ -188,6 +194,65 @@ function display() {
             drawSearchPath(i);
         }
     }
+
+    // draw the binary search tree
+    function drawBst(tree, x, y, layerSpacing, height) {
+        // draw current node
+        ctx.strokeStyle = '#000000'; // black
+        ctx.lineWidth = 2;
+        ctx.fillText(tree.k, x, y);
+        ctx.beginPath();
+        if (step !== -1 && searchPath[step] === tree.v) {
+            // currently searching on this node
+            ctx.strokeStyle = '#0061ff'; // blue
+            ctx.lineWidth = 4;
+        }
+        ctx.arc(x, y, fontSize, 0, 2 * Math.PI);
+        ctx.stroke();
+        // reset values
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        // parents draw lines to their children
+        // then recursively draw lower nodes
+        if (tree.l) {
+            ctx.beginPath();
+            ctx.moveTo(x - fontSize, y); // x - radius
+            ctx.lineTo(
+                x - layerSpacing - (Math.pow(5, height)), // childX center
+                y + layerSpacing - fontSize // childY - radius
+            );
+            ctx.stroke();
+            drawBst(
+                tree.l,
+                x - layerSpacing - (Math.pow(5, height)),
+                y + layerSpacing,
+                layerSpacing,
+                height - 1
+            );
+        }
+        if (tree.r) {
+            ctx.beginPath();
+            ctx.moveTo(x + fontSize, y); // x + radius
+            ctx.lineTo(
+                x + layerSpacing + (Math.pow(5, height)), // childX center
+                y + layerSpacing - fontSize // childY - radius
+            );
+            ctx.stroke();
+            drawBst(
+                tree.r,
+                x + layerSpacing + (Math.pow(5, height)),
+                y + layerSpacing,
+                layerSpacing,
+                height - 1
+            );
+        }
+    }
+    const bstOriginX = 360;
+    const bstOriginY = 360;
+    // spacing will be decided by height
+    const height = bst.height(searchTree);
+    const layerSpacing = 50;
+    drawBst(searchTree, bstOriginX, bstOriginY, layerSpacing, height);
 }
 
 window.onload = function() {
