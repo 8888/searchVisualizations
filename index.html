@@ -3,9 +3,42 @@
     <head>
         <meta charset="UTF-8">
         <title>Search Visualizations</title>
+        <link rel="stylesheet" type="text/css" href="index.css">
     </head>
     <body>
-        <canvas id="canvasElement" width="720" height="720" oncontextmenu="return false;" style="outline: none;"></canvas>
+        <div class="grid-container">
+            <div class="top-bar">
+                <p>Search Visualizations!</p>
+            </div>
+            <div class="side-bar">
+                <input id="side-bar-input" type="number">
+                <button id="side-bar-step" type="button">step</button>
+                <button type="button">Insert</button>
+                <button type="button">Remove</button>
+                <button id="side-bar-search-target" type="button">Search Target</button>
+                <div class="side-canvas-container">
+                    <canvas
+                        id="sideCanvasElement"
+                        width="360"
+                        height="540"
+                        oncontextmenu="return false;"
+                        style="outline: none;">
+                    </canvas>
+                </div>
+            </div>
+            <div class="main-canvas-container">
+                <canvas
+                    id="mainCanvasElement"
+                    width="720"
+                    height="720"
+                    oncontextmenu="return false;"
+                    style="outline: none;">
+                </canvas>
+            </div>
+            <div class="bottom-bar">
+                <p>Created by: Lee Costello</p>
+            </div>
+        </div>
         <script type="module" src="index.js"></script>
     </body>
 </html>
