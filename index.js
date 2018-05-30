@@ -78,6 +78,21 @@ function display() {
         2,
         margin
     );
+    sideCtx.fillText(
+        'Tree Height: ' + bst.height(searchTree),
+        2,
+        margin * 2
+    );
+    sideCtx.fillText(
+        'Total Nodes: ' + searchField.length,
+        2,
+        margin * 3
+    );
+    sideCtx.fillText(
+        'Current Search Step: ' + (step + 1),
+        2,
+        margin * 4
+    );
 
     mainCtx.fillStyle = '#000000'; // black
     mainCtx.strokeStyle = '#000000';
