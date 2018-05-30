@@ -1,0 +1,24 @@
+{
+  "name": "searchvisualizations",
+  "version": "0.0.1",
+  "description": "Visualizations of common computer science search algorithms",
+  "main": "index.html",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "php -S 127.0.0.1:8000",
+    "serve": "start http://localhost:8000/",
+    "test": "start http://localhost:8000/test/test.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/betterin30days/searchVisualizations.git"
+  },
+  "author": "Better in 30 Days (Lee Costello)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/betterin30days/searchVisualizations/issues"
+  },
+  "homepage": "https://github.com/betterin30days/searchVisualizations#readme"
+}
