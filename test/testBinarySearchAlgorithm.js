@@ -1,6 +1,6 @@
 'use strict';
 
-import { binarySearch } from '../search.js';
+import { binarySearch } from '../search/binarySearchAlgorithm.js';
 
 describe('binarySearch()', function() {
     it('should have index of target as last item in result: ', function() {

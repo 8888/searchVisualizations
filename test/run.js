@@ -1,4 +1,4 @@
-import './test.js';
+import './testbinarySearchAlgorithm.js';
 import './testBinarySearchTree.js';
 
 mocha.checkLeaks();

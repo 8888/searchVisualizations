@@ -1,6 +1,6 @@
 'use strict';
 
-import * as bst from '../binarySearchTree.js';
+import * as bst from '../search/binarySearchTree.js';
 
 describe('binarySearchTree', function() {
     describe('node()', function() {

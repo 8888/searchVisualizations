@@ -1,7 +1,7 @@
 'use strict';
 
-import { binarySearch } from './search.js';
-import * as bst from './binarySearchTree.js';
+import { binarySearch } from './search/binarySearchAlgorithm.js';
+import * as bst from './search/binarySearchTree.js';
 
 const mainCanvas = document.getElementById('mainCanvasElement');
 const sideCanvas = document.getElementById('sideCanvasElement');
