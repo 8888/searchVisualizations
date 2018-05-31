@@ -1,6 +1,6 @@
 'use strict';
 
-import { binarySearch } from './search/binarySearchAlgorithm.js';
+import * as bsa from './search/binarySearchAlgorithm.js';
 import * as bst from './search/binarySearchTree.js';
 
 const mainCanvas = document.getElementById('mainCanvasElement');
@@ -59,7 +59,7 @@ function init() {
 }
 
 function update(delta) {
-    searchPath = binarySearch(searchField, searchTarget);
+    searchPath = bsa.binarySearchPath(searchField, searchTarget);
 }
 
 function display() {

@@ -15,7 +15,7 @@ const insert = (key, value, tree) => {
     // inserts a node into a binary search tree
     // returns the new tree
     // uses recursion with each lower node being passed as tree
-    if (key == tree.k) {
+    if (key === tree.k) {
         // node key already exists
         // replace value
         return node(key, value, tree.l, tree.r);
