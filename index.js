@@ -23,10 +23,11 @@ const margin = 25;
 const fontSize = 10;
 
 // temporary values
-const searchField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
+// let searchField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
+let searchField = [8,13,35,58,60,79,88];
 let searchTarget = 88;
 let searchPath = [];
-const searchTree = bst.balance(bst.createFromArray(searchField));
+let searchTree = bst.balance(bst.createFromArray(searchField));
 let step = -1;
 
 const getUserInput = (reset = false) => {
@@ -56,10 +57,19 @@ function init() {
             step = -1;
         }
     });
+
+    document.getElementById('side-bar-insert').addEventListener('click', () => {
+        const value = getUserInput(true);
+        if (value) {
+            searchField = bsa.sortedInsert(value, searchField);
+            step = -1;
+        }
+    });
 }
 
 function update(delta) {
     searchPath = bsa.binarySearchPath(searchField, searchTarget);
+    searchTree = bst.balance(bst.createFromArray(searchField));
 }
 
 function display() {
