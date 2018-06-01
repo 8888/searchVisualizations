@@ -33,13 +33,24 @@ const defaultStyle = Draw.styleParameters(
     {arrayCenter: 300, arrayLineOrigin: 100, bstOrigin: 360, bstLayer: 50} // ySpacing
 );
 
-// temporary values
-// let searchField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
-let searchField = [8,13,35,58,60,79,88];
-let searchTarget = 88;
-let searchPath = [];
-let searchTree = bst.balance(bst.createFromArray(searchField));
-let step = -1;
+// starting values
+// const startingField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
+const startingField = [8,13,35,58,60,79,88];
+const startingTarget = 88;
+let state = {
+    searchField: null,
+    searchTarget: null,
+    searchPath: null,
+    searchTree: null,
+    step: null,
+    statsAreDirty: false,
+    searchIsDirty: false
+};
+let updatedState = {
+    searchField: startingField,
+    searchTarget: startingTarget,
+    step: -1
+};
 
 const getUserInput = (reset = false) => {
     // gets value from user input box
@@ -54,97 +65,115 @@ const getUserInput = (reset = false) => {
 function init() {
     // create event listeners
     document.getElementById('side-bar-step').addEventListener('click', () => {
-        if (step < searchPath.length - 1) {
-            step += 1;
+        if (state.step < state.searchPath.length - 1) {
+            updatedState.step += 1;
         } else {
-            step = -1;
+            updatedState.step = -1;
         }
     });
 
     document.getElementById('side-bar-search-target').addEventListener('click', () => {
         const value = getUserInput(true);
         if (value) {
-            searchTarget = value;
-            step = -1;
+            updatedState.searchTarget = value;
+            updatedState.step = -1;
         }
     });
 
     document.getElementById('side-bar-insert').addEventListener('click', () => {
         const value = getUserInput(true);
         if (value) {
-            searchField = bsa.sortedInsert(value, searchField);
-            step = -1;
+            updatedState.searchField = bsa.sortedInsert(value, state.searchField);
+            updatedState.step = -1;
         }
     });
 
     document.getElementById('side-bar-remove').addEventListener('click', () => {
         const value = getUserInput(true);
         if (value) {
-            searchField = bsa.remove(value, searchField);
-            step = -1;
+            updatedState.searchField = bsa.remove(value, state.searchField);
+            updatedState.step = -1;
         }
     });
 }
 
 function update(delta) {
-    searchPath = bsa.binarySearchPath(searchField, searchTarget);
-    searchTree = bst.balance(bst.createFromArray(searchField));
+    // check if values have changed
+    if (state.searchField !== updatedState.searchField || state.searchTarget !== updatedState.searchTarget) {
+        state.searchField = updatedState.searchField;
+        state.searchTarget = updatedState.searchTarget;
+        state.searchPath = bsa.binarySearchPath(state.searchField, state.searchTarget);
+        state.searchTree = bst.balance(bst.createFromArray(state.searchField));
+        state.statsAreDirty = true;
+        state.searchIsDirty = true;
+    }
+    if (state.step !== updatedState.step) {
+        state.step = updatedState.step;
+        state.statsAreDirty = true;
+        state.searchIsDirty = true;
+    }
 }
 
 function display() {
-    // all drawing is currently very inefficient
-    // portions are redrawn every frame even when they don't change
-    // this is purely prototype at this point just to see how it will look
-    mainCtx.clearRect(0, 0, mainCanvasWidth, mainCanvasHeight);
-    sideCtx.clearRect(0, 0, sideCanvasWidth, sideCanvasHeight);
-    Draw.updateCanvasStyle(mainCtx, defaultStyle);
-    Draw.updateCanvasStyle(sideCtx, defaultStyle);
+    if (state.statsAreDirty) {
+        // draw the stats canvas
+        sideCtx.clearRect(0, 0, sideCanvasWidth, sideCanvasHeight);
+        Draw.updateCanvasStyle(sideCtx, defaultStyle);
 
-    Draw.drawStats(
-        sideCtx,
-        searchTarget,
-        bst.height(searchTree),
-        searchField.length,
-        step,
-        defaultStyle
-    );
-    Draw.updateCanvasStyle(sideCtx, defaultStyle);
+        Draw.drawStats(
+            sideCtx,
+            state.searchTarget,
+            bst.height(state.searchTree),
+            state.searchField.length,
+            state.step,
+            defaultStyle
+        );
+        state.statsAreDirty = false;
+    }
 
-    Draw.drawArrayField(
-        mainCtx,
-        searchField,
-        defaultStyle.xSpacing['arrayStart'],
-        defaultStyle.ySpacing['arrayCenter'],
-        defaultStyle.xSpacing['arrayValues'],
-        defaultStyle
-    );
-    Draw.updateCanvasStyle(mainCtx, defaultStyle);
+    if (state.searchIsDirty) {
+        // draw the search canvas
+        mainCtx.clearRect(0, 0, mainCanvasWidth, mainCanvasHeight);
+        Draw.updateCanvasStyle(mainCtx, defaultStyle);
 
-    Draw.drawSearchPath(
-        mainCtx,
-        searchField,
-        searchTarget,
-        searchPath,
-        step,
-        defaultStyle.xSpacing['arrayValues'],
-        defaultStyle.ySpacing['arrayLineOrigin'],
-        defaultStyle.ySpacing['arrayCenter'],
-        defaultStyle
-    );
-    Draw.updateCanvasStyle(mainCtx, defaultStyle);
+        if (state.searchField.length) {
+            Draw.drawArrayField(
+                mainCtx,
+                state.searchField,
+                defaultStyle.xSpacing['arrayStart'],
+                defaultStyle.ySpacing['arrayCenter'],
+                defaultStyle.xSpacing['arrayValues'],
+                defaultStyle
+            );
+            Draw.updateCanvasStyle(mainCtx, defaultStyle);
 
-    Draw.drawBst(
-        mainCtx,
-        searchTree,
-        step,
-        searchPath,
-        defaultStyle.xSpacing['bstOrigin'],
-        defaultStyle.ySpacing['bstOrigin'],
-        defaultStyle.ySpacing['bstLayer'],
-        bst.height(searchTree),
-        defaultStyle
-    );
-    Draw.updateCanvasStyle(mainCtx, defaultStyle);
+            Draw.drawSearchPath(
+                mainCtx,
+                state.searchField,
+                state.searchTarget,
+                state.searchPath,
+                state.step,
+                defaultStyle.xSpacing['arrayValues'],
+                defaultStyle.ySpacing['arrayLineOrigin'],
+                defaultStyle.ySpacing['arrayCenter'],
+                defaultStyle
+            );
+            Draw.updateCanvasStyle(mainCtx, defaultStyle);
+
+            Draw.drawBst(
+                mainCtx,
+                state.searchTree,
+                state.step,
+                state.searchPath,
+                defaultStyle.xSpacing['bstOrigin'],
+                defaultStyle.ySpacing['bstOrigin'],
+                defaultStyle.ySpacing['bstLayer'],
+                bst.height(state.searchTree),
+                defaultStyle
+            );
+        }
+        state.searchIsDirty = false;
+    }
 }
 
 window.onload = function() {
