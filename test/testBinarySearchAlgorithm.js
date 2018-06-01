@@ -89,4 +89,24 @@ describe('binarySearchAlgorithm', function() {
             chai.expect(bsa.sortedInsert(8, [])).eql([8]);
         });
     });
+
+    describe('remove()', function() {
+        let array1;
+        beforeEach(function() {
+            array1 = [2,4,6,8,10];
+        });
+        it('array remains sorted after removal: ', function() {
+            chai.expect(bsa.remove(8, array1)).eql([2,4,6,10]);
+        });
+        it('does not mutate original array: ', function() {
+            bsa.remove(8, array1);
+            chai.expect(array1).eql([2,4,6,8,10]);
+        });
+        it('returns original array if value not found: ', function() {
+            chai.expect(bsa.remove(1, array1)).eql([2,4,6,8,10]);
+        });
+        it('removes one element if there are duplicates: ', function() {
+            chai.expect(bsa.remove(2, [1,2,2,3])).eql([1,2,3]);
+        });
+    });
 });

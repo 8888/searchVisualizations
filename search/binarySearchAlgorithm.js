@@ -50,6 +50,7 @@ const sortedInsert = (value, arr, duplicates = false, index = 0) => {
     // inserts a value into an already sorted array
     // returns a new array that is still sorted
     // duplicates bool controls if inserting a duplicate value is allowed
+    // default as false because it will break binary searching
     // index is default at 0 and is used for recursion
     if (value === arr[index]) {
         if (duplicates) {
@@ -78,8 +79,24 @@ const sortedInsert = (value, arr, duplicates = false, index = 0) => {
     }
 };
 
+const remove = (value, arr) => {
+    // removes the value from a sorted array
+    // used binarySearch to find the index to remove
+    // returns a new array without that value
+    // returns the original array if value is not found
+    const index = binarySearch(arr, value);
+    if (index === -1) {
+        // value was not found
+        return arr;
+    } else {
+        // value was found
+        return arr.slice(0, index).concat(arr.slice(index + 1));
+    }
+};
+
 export {
     binarySearch,
     binarySearchPath,
-    sortedInsert
+    sortedInsert,
+    remove
 };
