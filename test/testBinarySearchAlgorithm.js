@@ -60,4 +60,33 @@ describe('binarySearchAlgorithm', function() {
             });
         });
     });
+
+    describe('sortedInsert()', function() {
+        let array1;
+        beforeEach(function() {
+            array1 = [2,4,6,8,10];
+        });
+        it('array remains sorted (element within values): ', function() {
+            chai.expect(bsa.sortedInsert(5, array1)).eql([2,4,5,6,8,10]);
+        });
+        it('array remains sorted (element less than all values): ', function() {
+            chai.expect(bsa.sortedInsert(1, array1)).eql([1,2,4,6,8,10]);
+        });
+        it('array remains sorted (element greater than all values): ', function() {
+            chai.expect(bsa.sortedInsert(12, array1)).eql([2,4,6,8,10,12]);
+        });
+        it('original array is not mutated: ', function() {
+            bsa.sortedInsert(5, array1);
+            chai.expect(array1).eql([2,4,6,8,10]);
+        });
+        it('allows duplicates: ', function() {
+            chai.expect(bsa.sortedInsert(8, array1, true)).eql([2,4,6,8,8,10]);
+        });
+        it('does not allow duplicates: ', function() {
+            chai.expect(bsa.sortedInsert(8, array1)).eql([2,4,6,8,10]);
+        });
+        it('handles an empty array: ', function() {
+            chai.expect(bsa.sortedInsert(8, [])).eql([8]);
+        });
+    });
 });

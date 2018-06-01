@@ -46,7 +46,40 @@ const binarySearchPath = (field, target, low = 0, high = field.length - 1, path 
     }
 };
 
+const sortedInsert = (value, arr, duplicates = false, index = 0) => {
+    // inserts a value into an already sorted array
+    // returns a new array that is still sorted
+    // duplicates bool controls if inserting a duplicate value is allowed
+    // index is default at 0 and is used for recursion
+    if (value === arr[index]) {
+        if (duplicates) {
+            // value is a duplicate of this element
+            // insert at index before
+            return arr.slice(0, index).concat(value, arr.slice(index));
+        } else {
+            // value is a duplicate and this isn't allowed
+            return arr;
+        }
+    } else if (value > arr[index]) {
+        // value is still greater then value at this index
+        // check the next index
+        if (index + 1 < arr.length) {
+            // next index is in range
+            return sortedInsert(value, arr, duplicates, index + 1);
+        } else {
+            // next index is out of range
+            // insert at the end
+            return arr.concat(value);
+        }
+    } else {
+        // value is now less than value at this index
+        // insert at index before
+        return arr.slice(0, index).concat(value, arr.slice(index));
+    }
+};
+
 export {
     binarySearch,
-    binarySearchPath
+    binarySearchPath,
+    sortedInsert
 };
