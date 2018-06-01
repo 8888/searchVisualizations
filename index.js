@@ -65,6 +65,14 @@ function init() {
             step = -1;
         }
     });
+
+    document.getElementById('side-bar-remove').addEventListener('click', () => {
+        const value = getUserInput(true);
+        if (value) {
+            searchField = bsa.remove(value, searchField);
+            step = -1;
+        }
+    });
 }
 
 function update(delta) {
