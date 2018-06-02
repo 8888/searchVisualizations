@@ -13,6 +13,10 @@ const mainCanvasWidth = mainCanvas.width;
 const mainCanvasHeight = mainCanvas.height;
 const mainCanvasBounds = mainCanvas.getBoundingClientRect();
 const mainCtx = mainCanvas.getContext('2d');
+let mainMouseX = {old: null, new: null};
+let mainMouseY = {old: null, new: null};
+let mainMouseDrag = false;
+let mainScaleFactor = 1;
 // sideCanvas parameters
 const sideCanvasWidth = sideCanvas.width;
 const sideCanvasHeight = sideCanvas.height;
@@ -34,8 +38,7 @@ const defaultStyle = Draw.styleParameters(
 );
 
 // starting values
-// const startingField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
-const startingField = [8,13,35,58,60,79,88];
+const startingField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
 const startingTarget = 88;
 let state = {
     searchField: null,
@@ -95,6 +98,38 @@ function init() {
             updatedState.step = -1;
         }
     });
+
+    mainCanvas.addEventListener('mousemove', (event) => {
+        mainMouseX.new = event.clientX - mainCanvasBounds.left;
+        mainMouseY.new = event.clientY - mainCanvasBounds.top;
+    });
+
+    mainCanvas.addEventListener('mousedown', (event) => {
+        if (event.button === 0) { // left click
+            mainMouseDrag = true;
+            mainMouseX.old = event.clientX - mainCanvasBounds.left;
+            mainMouseY.old = event.clientY - mainCanvasBounds.top;
+        }
+    });
+
+    mainCanvas.addEventListener('mouseup', (event) => {
+        if (event.button === 0) { // left click
+            mainMouseDrag = false;
+        }
+    });
+
+    const handleScrollWheel = (event) => {
+        // event.deltaY = 100 for wheel down (zoom out)
+        // event.deltaY = -100 for wheel up (zoom in)
+        // scale factor should be 0.9 for zoom out (using 100)
+        // scale factor should be 1.1 for zoom in (using -100)
+        // 1 - (100 * .001) = 0.9
+        // 1 - (-100 * .001) = 1.1
+        mainScaleFactor -= (event.deltaY * .001);
+    };
+
+    mainCanvas.addEventListener('mousewheel', handleScrollWheel);
+    mainCanvas.addEventListener('DOMMouseScroll', handleScrollWheel);
 }
 
 function update(delta) {
@@ -111,6 +146,26 @@ function update(delta) {
         state.step = updatedState.step;
         state.statsAreDirty = true;
         state.searchIsDirty = true;
+    }
+
+    // pan
+    if (mainMouseDrag) {
+        const dx = mainMouseX.new - mainMouseX.old;
+        const dy = mainMouseY.new - mainMouseY.old;
+        mainMouseX.old = mainMouseX.new;
+        mainMouseY.old = mainMouseY.new;
+        mainCtx.translate(dx, dy);
+        state.searchIsDirty = true;
+    }
+
+    // zoom
+    if (mainScaleFactor !== 1) {
+        // scale factor has changed
+        mainCtx.translate(mainMouseX.new, mainMouseY.new);
+        mainCtx.scale(mainScaleFactor, mainScaleFactor);
+        state.searchIsDirty = true;
+        mainCtx.translate(-mainMouseX.new, -mainMouseY.new);
+        mainScaleFactor = 1;
     }
 }
 
@@ -133,7 +188,11 @@ function display() {
 
     if (state.searchIsDirty) {
         // draw the search canvas
+        // clear entire canvase, even if transformed
+        mainCtx.save();
+        mainCtx.setTransform(1, 0, 0, 1, 0, 0);
         mainCtx.clearRect(0, 0, mainCanvasWidth, mainCanvasHeight);
+        mainCtx.restore();
         Draw.updateCanvasStyle(mainCtx, defaultStyle);
 
         if (state.searchField.length) {
