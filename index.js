@@ -16,7 +16,9 @@ const mainCtx = mainCanvas.getContext('2d');
 let mainMouseX = {old: null, new: null};
 let mainMouseY = {old: null, new: null};
 let mainMouseDrag = false;
+let mainOrigin = {x: 0, y: 0};
 let mainScaleFactor = 1;
+let mainScaleTotal = mainScaleFactor;
 // sideCanvas parameters
 const sideCanvasWidth = sideCanvas.width;
 const sideCanvasHeight = sideCanvas.height;
@@ -125,7 +127,9 @@ function init() {
         // scale factor should be 1.1 for zoom in (using -100)
         // 1 - (100 * .001) = 0.9
         // 1 - (-100 * .001) = 1.1
-        mainScaleFactor -= (event.deltaY * .001);
+        const scaleFactor = (event.deltaY * .001); // current change
+        mainScaleFactor -= scaleFactor; // applied this cycle to canvas
+        mainScaleTotal *= mainScaleFactor; // total scaling applied
     };
 
     mainCanvas.addEventListener('mousewheel', handleScrollWheel);
@@ -150,11 +154,13 @@ function update(delta) {
 
     // pan
     if (mainMouseDrag) {
-        const dx = mainMouseX.new - mainMouseX.old;
-        const dy = mainMouseY.new - mainMouseY.old;
+        const dx = (mainMouseX.new - mainMouseX.old) / mainScaleTotal;
+        const dy = (mainMouseY.new - mainMouseY.old) / mainScaleTotal;
         mainMouseX.old = mainMouseX.new;
         mainMouseY.old = mainMouseY.new;
         mainCtx.translate(dx, dy);
+        mainOrigin.x += dx;
+        mainOrigin.y += dy;
         state.searchIsDirty = true;
     }
 
