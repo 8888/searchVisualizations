@@ -16,9 +16,9 @@ const mainCtx = mainCanvas.getContext('2d');
 let mainMouseX = {old: null, new: null};
 let mainMouseY = {old: null, new: null};
 let mainMouseDrag = false;
-let mainOrigin = {x: 0, y: 0};
+let mainOriginX = 0;
+let mainOriginY = 0;
 let mainScaleFactor = 1;
-let mainScaleTotal = mainScaleFactor;
 // sideCanvas parameters
 const sideCanvasWidth = sideCanvas.width;
 const sideCanvasHeight = sideCanvas.height;
@@ -49,12 +49,14 @@ let state = {
     searchTree: null,
     step: null,
     statsAreDirty: false,
-    searchIsDirty: false
+    searchIsDirty: false,
+    mainScaleFactor: 1 // total scale to draw at
 };
 let updatedState = {
     searchField: startingField,
     searchTarget: startingTarget,
-    step: -1
+    step: -1,
+    mainScaleFactor: state.mainScaleFactor
 };
 
 const getUserInput = (reset = false) => {
@@ -123,13 +125,12 @@ function init() {
     const handleScrollWheel = (event) => {
         // event.deltaY = 100 for wheel down (zoom out)
         // event.deltaY = -100 for wheel up (zoom in)
-        // scale factor should be 0.9 for zoom out (using 100)
-        // scale factor should be 1.1 for zoom in (using -100)
-        // 1 - (100 * .001) = 0.9
-        // 1 - (-100 * .001) = 1.1
+        // scale factor should be +0.1 for zoom out (using 100)
+        // scale factor should be -0.1 for zoom in (using -100)
+        // 1 - (100 * .001) = 0.9 (zoom out -> everything is drawn at 0.9x size)
+        // 1 - (-100 * .001) = 1.1 (zoom in -> everything is drawn at 1.1x size)
         const scaleFactor = (event.deltaY * .001); // current change
-        mainScaleFactor -= scaleFactor; // applied this cycle to canvas
-        mainScaleTotal *= mainScaleFactor; // total scaling applied
+        updatedState.mainScaleFactor -= scaleFactor;
     };
 
     mainCanvas.addEventListener('mousewheel', handleScrollWheel);
@@ -154,24 +155,34 @@ function update(delta) {
 
     // pan
     if (mainMouseDrag) {
-        const dx = (mainMouseX.new - mainMouseX.old) / mainScaleTotal;
-        const dy = (mainMouseY.new - mainMouseY.old) / mainScaleTotal;
+        const dx = (mainMouseX.new - mainMouseX.old) / mainScaleFactor;
+        const dy = (mainMouseY.new - mainMouseY.old) / mainScaleFactor;
         mainMouseX.old = mainMouseX.new;
         mainMouseY.old = mainMouseY.new;
-        mainCtx.translate(dx, dy);
-        mainOrigin.x += dx;
-        mainOrigin.y += dy;
+        mainOriginX += dx;
+        mainOriginY += dy;
         state.searchIsDirty = true;
     }
 
     // zoom
-    if (mainScaleFactor !== 1) {
+    if (state.mainScaleFactor !== updatedState.mainScaleFactor) {
         // scale factor has changed
-        mainCtx.translate(mainMouseX.new, mainMouseY.new);
-        mainCtx.scale(mainScaleFactor, mainScaleFactor);
+        const oldScale = state.mainScaleFactor;
+        const newScale = updatedState.mainScaleFactor;
+        // adjust origin to keep the point that cursor is at from moving
+        // location in old scale units
+        // mouse and origin are at 1:1 real scale
+        const x = (mainMouseX.new - mainOriginX) / oldScale;
+        const y = (mainMouseY.new - mainOriginY) / oldScale;
+        // calculate different in real scale
+        const dx = (x * oldScale) - (x * newScale);
+        const dy = (y * oldScale) - (y * newScale);
+        // adjust origin
+        mainOriginX += dx;
+        mainOriginY += dy;
+        // set new state
+        state.mainScaleFactor = newScale;
         state.searchIsDirty = true;
-        mainCtx.translate(-mainMouseX.new, -mainMouseY.new);
-        mainScaleFactor = 1;
     }
 }
 
@@ -199,7 +210,12 @@ function display() {
         mainCtx.setTransform(1, 0, 0, 1, 0, 0);
         mainCtx.clearRect(0, 0, mainCanvasWidth, mainCanvasHeight);
         mainCtx.restore();
-        Draw.updateCanvasStyle(mainCtx, defaultStyle);
+
+        mainCtx.save(); // save origin before pan and zoom
+        mainCtx.translate(mainOriginX, mainOriginY); // pan
+        mainCtx.scale(state.mainScaleFactor, state.mainScaleFactor); // zoom
+
+        Draw.updateCanvasStyle(mainCtx, defaultStyle); // init defaults
 
         if (state.searchField.length) {
             Draw.drawArrayField(
@@ -238,6 +254,7 @@ function display() {
             );
         }
         state.searchIsDirty = false;
+        mainCtx.restore(); // restore from pre-transform save
     }
 }
 
