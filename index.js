@@ -35,7 +35,7 @@ const defaultStyle = Draw.styleParameters(
     'start', // textAlign
     25, // xMargin
     25, // yMargin
-    {arrayStart: 0, arrayValues: 40, bstOrigin: 360}, // xSpacing
+    {arrayStart: 0, arrayValues: 40, bstOrigin: 360, bstNode: 15}, // xSpacing
     {arrayCenter: 300, arrayLineOrigin: 100, bstOrigin: 360, bstLayer: 50} // ySpacing
 );
 
@@ -248,6 +248,7 @@ function display() {
                 state.searchPath,
                 defaultStyle.xSpacing['bstOrigin'],
                 defaultStyle.ySpacing['bstOrigin'],
+                defaultStyle.xSpacing['bstNode'],
                 defaultStyle.ySpacing['bstLayer'],
                 bst.height(state.searchTree),
                 defaultStyle

@@ -151,7 +151,7 @@ const drawSearchPath = (
     }
 };
 
-const drawBst = (ctx, tree, step, path, x, y, layerSpacing, height, styleParams) => {
+const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height, styleParams) => {
     ctx.textAlign = 'center';
     // draw current node
     ctx.fillText(tree.k, x, y);
@@ -172,7 +172,8 @@ const drawBst = (ctx, tree, step, path, x, y, layerSpacing, height, styleParams)
         ctx.beginPath();
         ctx.moveTo(x - styleParams.fontSize, y); // x - radius
         ctx.lineTo(
-            x - layerSpacing - (Math.pow(5, height)), // childX center
+            // Math.pow(2, height) = number of nodes at this height
+            x - (nodeSpacing * Math.pow(2, height)), // childX center
             y + layerSpacing - styleParams.fontSize // childY - radius
         );
         ctx.stroke();
@@ -181,8 +182,9 @@ const drawBst = (ctx, tree, step, path, x, y, layerSpacing, height, styleParams)
             tree.l,
             step,
             path,
-            x - layerSpacing - (Math.pow(5, height)),
+            x - (nodeSpacing * Math.pow(2, height)),
             y + layerSpacing,
+            nodeSpacing,
             layerSpacing,
             height - 1,
             styleParams
@@ -192,7 +194,7 @@ const drawBst = (ctx, tree, step, path, x, y, layerSpacing, height, styleParams)
         ctx.beginPath();
         ctx.moveTo(x + styleParams.fontSize, y); // x + radius
         ctx.lineTo(
-            x + layerSpacing + (Math.pow(5, height)), // childX center
+            x + (nodeSpacing * Math.pow(2, height)), // childX center
             y + layerSpacing - styleParams.fontSize // childY - radius
         );
         ctx.stroke();
@@ -201,8 +203,9 @@ const drawBst = (ctx, tree, step, path, x, y, layerSpacing, height, styleParams)
             tree.r,
             step,
             path,
-            x + layerSpacing + (Math.pow(5, height)),
+            x + (nodeSpacing * Math.pow(2, height)),
             y + layerSpacing,
+            nodeSpacing,
             layerSpacing,
             height - 1,
             styleParams
