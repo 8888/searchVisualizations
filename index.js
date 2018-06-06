@@ -69,6 +69,25 @@ const getUserInput = (reset = false) => {
     return parseInt(value);
 };
 
+const handleFiles = (files) => {
+    // files is a FileList array like object, not a normal array
+    // this handles multiple files by default
+    // but currently this will only use the last file to create data from
+    // it will actually use them all, but keep overwriting each other
+    // since FileReader is async, there's no gurantee on what file will be last
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const result = JSON.parse(event.target.result);
+        updatedState.searchField = result;
+        updatedState.step = -1;
+    };
+    [...files].forEach(file => {
+        if (file.type == 'application/json') {
+            reader.readAsText(file);
+        }
+    });
+};
+
 function init() {
     // create event listeners
     document.getElementById('side-bar-step').addEventListener('click', () => {
@@ -103,6 +122,21 @@ function init() {
         }
     });
 
+    document.getElementById('side-bar-file-drop').addEventListener('dragover', (event) => {
+        // prevent default browser behavior
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    document.getElementById('side-bar-file-drop').addEventListener('drop', (event) => {
+        // prevent default browser behavior
+        event.preventDefault();
+        event.stopPropagation();
+        // access the dropped files
+        handleFiles(event.dataTransfer.files);
+    });
+
+    // canvas event listeners
     mainCanvas.addEventListener('mousemove', (event) => {
         mainMouseX.new = event.clientX - mainCanvasBounds.left;
         mainMouseY.new = event.clientY - mainCanvasBounds.top;
