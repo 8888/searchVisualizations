@@ -164,7 +164,13 @@ function init() {
         // 1 - (100 * .001) = 0.9 (zoom out -> everything is drawn at 0.9x size)
         // 1 - (-100 * .001) = 1.1 (zoom in -> everything is drawn at 1.1x size)
         const scaleFactor = (event.deltaY * .001); // current change
-        updatedState.mainScaleFactor -= scaleFactor;
+        const newScale = updatedState.mainScaleFactor - scaleFactor;
+        if (newScale > 0.1 && newScale < 3) {
+            // don't allow zooming out to zero or a negative factor
+            // 0 doesn't draw anything
+            // negative inverts the canvas
+            updatedState.mainScaleFactor = newScale;
+        }
     };
 
     mainCanvas.addEventListener('mousewheel', handleScrollWheel);
