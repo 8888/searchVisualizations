@@ -87,6 +87,7 @@ const _drawSearchPath = (
     index,
     xSpacing,
     xOrigin,
+    ySpacing,
     yOrigin,
     yEnd,
     correctPath,
@@ -99,20 +100,19 @@ const _drawSearchPath = (
     // horizontal
     ctx.strokeStyle = '#33cc33'; // green
     ctx.beginPath();
-    ctx.moveTo(xOrigin, yOrigin + (step * xSpacing));
-    ctx.lineTo(xEnd, yOrigin + (step * xSpacing));
+    ctx.moveTo(xOrigin, yOrigin);
+    ctx.lineTo(xEnd, yOrigin);
     ctx.stroke();
-    // xOrigin = xEnd;
     // vertical part 1
     ctx.beginPath();
-    ctx.moveTo(xEnd, yOrigin + (step * xSpacing));
-    ctx.lineTo(xEnd, yOrigin + (xSpacing * (step + 1))); // center is 1/2 fontSize and radius is fontSize
+    ctx.moveTo(xEnd, yOrigin);
+    ctx.lineTo(xEnd, yOrigin + ySpacing);
     ctx.stroke();
     // change color if this is an incorrect path
     ctx.strokeStyle = correctPath ? ctx.strokeStyle : '#cc0000'; // red
     // vertical part 2
     ctx.beginPath();
-    ctx.moveTo(xEnd, yOrigin + (xSpacing * (step + 1)));
+    ctx.moveTo(xEnd, yOrigin + ySpacing);
     ctx.lineTo(xEnd, yEnd - (styleParams.fontSize * 1.5)); // center is 1/2 fontSize and radius is fontSize
     ctx.stroke();
     // draw outline circle
@@ -129,20 +129,28 @@ const drawSearchPath = (
     path,
     step,
     xSpacing,
-    yOrigin,
+    ySpacing,
     yEnd,
     styleParams
 ) => {
     // public api to draw the array search paths
     for (let i = 0; i <= step; i++) {
         const correctPath = searchField[path[i]] == searchTarget;
-        const xOrigin = styleParams.xMargin + path[i - 1] * xSpacing; // center number is first
+        // sets x as the center of displayed number for this search path
+        const xOrigin = styleParams.xMargin + path[i - 1] * xSpacing;
+        // subtracting because lower y value is higher on grid
+        // start at the top and work lower
+        // yEnd is the center point of the numbers array
+        // ((path.length - i) * ySpacing) sets heigh needed to accomodate length of path
+        // (ySpacing * .75) is to give padding above the array
+        const yOrigin = yEnd - ((path.length - i) * ySpacing) - (ySpacing * .75);
         _drawSearchPath(
             ctx,
             i,
             path[i],
             xSpacing,
             xOrigin,
+            ySpacing,
             yOrigin,
             yEnd,
             correctPath,

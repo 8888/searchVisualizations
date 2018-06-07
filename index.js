@@ -36,7 +36,7 @@ const defaultStyle = Draw.styleParameters(
     25, // xMargin
     25, // yMargin
     {arrayStart: 0, arrayValues: 40, bstOrigin: 360, bstNode: 15}, // xSpacing
-    {arrayCenter: 300, arrayLineOrigin: 100, bstOrigin: 360, bstLayer: 50} // ySpacing
+    {arrayCenter: 300, arraySearchPath: 40, bstOrigin: 360, bstLayer: 50} // ySpacing
 );
 
 // starting values
@@ -269,7 +269,7 @@ function display() {
                 state.searchPath,
                 state.step,
                 defaultStyle.xSpacing['arrayValues'],
-                defaultStyle.ySpacing['arrayLineOrigin'],
+                defaultStyle.ySpacing['arraySearchPath'],
                 defaultStyle.ySpacing['arrayCenter'],
                 defaultStyle
             );
