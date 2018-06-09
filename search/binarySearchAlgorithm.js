@@ -94,9 +94,28 @@ const remove = (value, arr) => {
     }
 };
 
+const generateSearchField = (length, interval, result = []) => {
+    // generates a psuedo random search field
+    // the numbers should be different, but have a feel that they go together
+    // all values are integers greater than zero
+    // length is the desired length of the array
+    // interval is max difference between two sequential values
+    // returns an ordered array of non duplicating values
+    if (result.length >= length) {
+        // should never be greater than
+        return result;
+    }
+    // random number between 1 and interval, both inclusive
+    const rand = Math.floor((Math.random() * interval) + 1);
+    const lastValue = result.length ? result[result.length - 1] : 0;
+    const field = result.concat(lastValue + rand);
+    return generateSearchField(length, interval, field);
+};
+
 export {
     binarySearch,
     binarySearchPath,
     sortedInsert,
-    remove
+    remove,
+    generateSearchField
 };

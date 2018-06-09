@@ -109,4 +109,28 @@ describe('binarySearchAlgorithm', function() {
             chai.expect(bsa.remove(2, [1,2,2,3])).eql([1,2,3]);
         });
     });
+
+    describe('generateSearchField()', function() {
+        const iterations = 10000;
+        it('random value is within interval(1-5 inclusive): ', function() {
+            for (let i = 0; i < iterations; i++) {
+                chai.expect(bsa.generateSearchField(1, 5)[0]).lessThan(6).greaterThan(0);
+            }
+        });
+        it('sequential numbers are within interval: ', function() {
+            for (let i = 0; i < iterations; i++) {
+                const field = bsa.generateSearchField(2, 10);
+                chai.expect(field[1] - field[0]).lessThan(11);
+            }
+        });
+        it('numbers are non duplicating: ', function() {
+            for (let i = 0; i < iterations; i++) {
+                const field = bsa.generateSearchField(2, 1);
+                chai.expect(field[0]).not.equal(field[1]);
+            }
+        });
+        it('returns array of correct length: ', function() {
+            chai.expect(bsa.generateSearchField(10, 5).length).equal(10);
+        });
+    });
 });

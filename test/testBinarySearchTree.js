@@ -917,4 +917,28 @@ describe('binarySearchTree', function() {
             });
         });
     });
+
+    describe('nodesForHeight()', function() {
+        it('height of -2 (invalid): ', function() {
+            chai.expect(bst.nodesForHeight(-2)).equal(0);
+        });
+        it('height of -1 (breaking case): ', function() {
+            chai.expect(bst.nodesForHeight(-1)).equal(0);
+        });
+        it('height of 0 (root only): ', function() {
+            chai.expect(bst.nodesForHeight(0)).equal(1);
+        });
+        it('height of 1: ', function() {
+            chai.expect(bst.nodesForHeight(1)).equal(3);
+        });
+        it('height of 2: ', function() {
+            chai.expect(bst.nodesForHeight(2)).equal(7);
+        });
+        it('height of 3: ', function() {
+            chai.expect(bst.nodesForHeight(3)).equal(15);
+        });
+        it('height of 4: ', function() {
+            chai.expect(bst.nodesForHeight(4)).equal(31);
+        });
+    });
 });

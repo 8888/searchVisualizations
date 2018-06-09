@@ -40,7 +40,9 @@ const defaultStyle = Draw.styleParameters(
 );
 
 // starting values
-const startingField = [8,13,22,27,35,42,49,55,58,60,73,79,88,94,101];
+const startingHeight = 3; // height of BST
+const startingInterval = 10; // max difference between two sequential values
+const startingField = bsa.generateSearchField(bst.nodesForHeight(startingHeight), startingInterval);
 const startingTarget = 88;
 let state = {
     searchField: null,

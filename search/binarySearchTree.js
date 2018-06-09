@@ -255,6 +255,18 @@ const balance = (tree) => {
     return createFromOrderedArray(arr);
 };
 
+const nodesForHeight = (height, total = 0) =>{
+    // calculate number of nodes in a perfect bst of given height
+    // at height n, there are 2^n nodes on that level
+    // root is height 0
+    // recursively calc each row and add to total
+    if (height < 0) {
+        return total;
+    }
+    const nodes = Math.pow(2, height);
+    return nodesForHeight(height - 1, total + nodes);
+};
+
 export {
     node,
     insert,
@@ -266,5 +278,6 @@ export {
     createFromOrderedArray,
     createFromArray,
     height,
-    balance
+    balance,
+    nodesForHeight
 };
