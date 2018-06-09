@@ -61,12 +61,12 @@ let updatedState = {
     mainScaleFactor: state.mainScaleFactor
 };
 
-const getUserInput = (reset = false) => {
+const getUserInput = (id, reset = false) => {
     // gets value from user input box
     // resets value if true
-    const value = document.getElementById('side-bar-input').value;
+    const value = document.getElementById(id).value;
     if (reset) {
-        document.getElementById('side-bar-input').value = '';
+        document.getElementById(id).value = '';
     }
     return parseInt(value);
 };
@@ -101,7 +101,7 @@ function init() {
     });
 
     document.getElementById('side-bar-search-target').addEventListener('click', () => {
-        const value = getUserInput(true);
+        const value = getUserInput('side-bar-input', true);
         if (value) {
             updatedState.searchTarget = value;
             updatedState.step = -1;
@@ -109,7 +109,7 @@ function init() {
     });
 
     document.getElementById('side-bar-insert').addEventListener('click', () => {
-        const value = getUserInput(true);
+        const value = getUserInput('side-bar-input', true);
         if (value) {
             updatedState.searchField = bsa.sortedInsert(value, state.searchField);
             updatedState.step = -1;
@@ -117,7 +117,7 @@ function init() {
     });
 
     document.getElementById('side-bar-remove').addEventListener('click', () => {
-        const value = getUserInput(true);
+        const value = getUserInput('side-bar-input', true);
         if (value) {
             updatedState.searchField = bsa.remove(value, state.searchField);
             updatedState.step = -1;
@@ -136,6 +136,14 @@ function init() {
         event.stopPropagation();
         // access the dropped files
         handleFiles(event.dataTransfer.files);
+    });
+
+    document.getElementById('new-tree-create').addEventListener('click', () => {
+        const value = getUserInput('new-tree-input');
+        if (value <= 10 && value >= 0) {
+            updatedState.searchField = bsa.generateSearchField(bst.nodesForHeight(value), startingInterval);
+            updatedState.step = -1;
+        }
     });
 
     // canvas event listeners

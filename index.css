@@ -9,6 +9,7 @@
     background: tan;
     grid-column-start: 1;
     grid-column-end: 3;
+    border: 1px solid gray;
 }
 
 .side-bar {
@@ -19,6 +20,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: minmax(2em, max-content);
+    border: 1px solid gray;
 }
 
 #side-bar-input {
@@ -32,11 +34,40 @@
     grid-row-end: 3;
 }
 
+.new-tree-title {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    border-top: 1px solid gray;
+    text-align: center;
+    background: wheat;
+}
+
+.new-tree-height {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    display: grid;
+    grid-template-columns: auto;
+    grid-auto-rows: inherit;
+}
+
+
+#new-tree-input {
+    margin-left: 0.25em;
+    width: 5em;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+#new-tree-create {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
 #side-bar-file-drop {
     grid-column-start: 1;
     grid-column-end: 5;
     height: 6em;
-    margin-right: 1em;
+    margin: 1em;
     border: 2px dashed gray;
     background: whitesmoke;
     color: gray;
@@ -49,6 +80,7 @@
     /* background: floralwhite; */
     grid-column-start: 2;
     grid-column-end: auto;
+    border: 1px solid gray;
 }
 
 .side-canvas-container {
@@ -60,10 +92,9 @@
     background: tan;
     grid-column-start: 1;
     grid-column-end: 3;
+    border: 1px solid gray;
 }
 
 #mainCanvasElement {
     outline: none;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
 }
