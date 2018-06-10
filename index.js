@@ -35,7 +35,7 @@ const defaultStyle = Draw.styleParameters(
     'start', // textAlign
     25, // xMargin
     25, // yMargin
-    {arrayStart: 0, arrayValues: 40, bstOrigin: 360, bstNode: 15}, // xSpacing
+    {arrayStart: 0, arrayValues: 40, arrayCenter: 0, bstNode: 15}, // xSpacing
     {arrayCenter: 300, arraySearchPath: 40, bstOrigin: 360, bstLayer: 50} // ySpacing
 );
 
@@ -58,7 +58,8 @@ let updatedState = {
     searchField: startingField,
     searchTarget: startingTarget,
     step: -1,
-    mainScaleFactor: state.mainScaleFactor
+    mainScaleFactor: state.mainScaleFactor,
+    viewShouldCenter: false
 };
 
 const getUserInput = (id, reset = false) => {
@@ -82,6 +83,7 @@ const handleFiles = (files) => {
         const result = JSON.parse(event.target.result);
         updatedState.searchField = result;
         updatedState.step = -1;
+        updatedState.viewShouldCenter = true;
     };
     [...files].forEach(file => {
         if (file.type == 'application/json') {
@@ -143,6 +145,7 @@ function init() {
         if (value <= 10 && value >= 0) {
             updatedState.searchField = bsa.generateSearchField(bst.nodesForHeight(value), startingInterval);
             updatedState.step = -1;
+            updatedState.viewShouldCenter = true;
         }
     });
 
@@ -187,17 +190,53 @@ function init() {
     mainCanvas.addEventListener('DOMMouseScroll', handleScrollWheel);
 }
 
+const calcCenterOfField = () => {
+    // this portion assumes how the draw functions will work
+    // but this is only used by other drawing operations
+    // this allows alignment based off where the center of the array will be
+    defaultStyle.xSpacing['arrayCenter'] =
+        defaultStyle.xSpacing['arrayStart'] +
+        defaultStyle.xMargin +
+        (defaultStyle.xSpacing['arrayValues'] * Math.floor(state.searchField.length / 2));
+};
+
+const centerViewOnField = () => {
+    // when creating a new field, recenter the view
+    // screenCenter - arrayCenter = distance to move origin
+    const dx = (mainCanvasWidth / 2) - defaultStyle.xSpacing['arrayCenter'];
+    const dy = (mainCanvasHeight / 2) - defaultStyle.ySpacing['arrayCenter'];
+    // reset zoom scale
+    updatedState.mainScaleFactor = 1;
+    state.mainScaleFactor = 1;
+    // set new origin
+    mainOriginX = dx;
+    mainOriginY = dy;
+};
+
 function update(delta) {
     // check if values have changed
-    if (state.searchField !== updatedState.searchField || state.searchTarget !== updatedState.searchTarget) {
+    if (state.searchField !== updatedState.searchField) {
+        // search field has changed
         state.searchField = updatedState.searchField;
-        state.searchTarget = updatedState.searchTarget;
         state.searchPath = bsa.binarySearchPath(state.searchField, state.searchTarget);
         state.searchTree = bst.balance(bst.createFromArray(state.searchField));
         state.statsAreDirty = true;
         state.searchIsDirty = true;
+        calcCenterOfField();
+        if (updatedState.viewShouldCenter) {
+            centerViewOnField();
+            updatedState.viewShouldCenter = false;
+        }
+    }
+    if (state.searchTarget !== updatedState.searchTarget) {
+        // search target has changed
+        state.searchTarget = updatedState.searchTarget;
+        state.searchPath = bsa.binarySearchPath(state.searchField, state.searchTarget);
+        state.statsAreDirty = true;
+        state.searchIsDirty = true;
     }
     if (state.step !== updatedState.step) {
+        // search step has changed
         state.step = updatedState.step;
         state.statsAreDirty = true;
         state.searchIsDirty = true;
@@ -296,7 +335,7 @@ function display() {
                 state.searchTree,
                 state.step,
                 state.searchPath,
-                defaultStyle.xSpacing['bstOrigin'],
+                defaultStyle.xSpacing['arrayCenter'],
                 defaultStyle.ySpacing['bstOrigin'],
                 defaultStyle.xSpacing['bstNode'],
                 defaultStyle.ySpacing['bstLayer'],
