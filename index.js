@@ -59,7 +59,8 @@ let updatedState = {
     searchTarget: startingTarget,
     step: -1,
     mainScaleFactor: state.mainScaleFactor,
-    viewShouldCenter: true
+    viewShouldCenter: true,
+    additionalPanX: 0
 };
 
 const getUserInput = (id, reset = false) => {
@@ -153,6 +154,19 @@ function init() {
         updatedState.viewShouldCenter = true;
     });
 
+    const panScrollWheel = (event) => {
+        // shift + scroll wheel anywhere in the DOM will pan mainCanvas
+        if (event.shiftKey) {
+            // event.deltaY = 100 for wheel down (pan right)
+            // event.deltaY = -100 for wheel up (pan left)
+            // to pan right, the origin must move left, or decrease its x value
+            updatedState.additionalPanX -= event.deltaY;
+        }
+    };
+
+    document.addEventListener('mousewheel', panScrollWheel);
+    document.addEventListener('DOMMouseScroll', panScrollWheel);
+
     // canvas event listeners
     mainCanvas.addEventListener('mousemove', (event) => {
         mainMouseX.new = event.clientX - mainCanvasBounds.left;
@@ -173,25 +187,28 @@ function init() {
         }
     });
 
-    const handleScrollWheel = (event) => {
+    const zoomScrollWheel = (event) => {
         // event.deltaY = 100 for wheel down (zoom out)
         // event.deltaY = -100 for wheel up (zoom in)
         // scale factor should be +0.1 for zoom out (using 100)
         // scale factor should be -0.1 for zoom in (using -100)
         // 1 - (100 * .001) = 0.9 (zoom out -> everything is drawn at 0.9x size)
         // 1 - (-100 * .001) = 1.1 (zoom in -> everything is drawn at 1.1x size)
-        const scaleFactor = (event.deltaY * .001); // current change
-        const newScale = updatedState.mainScaleFactor - scaleFactor;
-        if (newScale > 0.1 && newScale < 3) {
-            // don't allow zooming out to zero or a negative factor
-            // 0 doesn't draw anything
-            // negative inverts the canvas
-            updatedState.mainScaleFactor = newScale;
+        if (!event.shiftKey) {
+            // if shift key is pressed, this is handled elsewhere for pan
+            const scaleFactor = (event.deltaY * .001); // current change
+            const newScale = updatedState.mainScaleFactor - scaleFactor;
+            if (newScale > 0.1 && newScale < 3) {
+                // don't allow zooming out to zero or a negative factor
+                // 0 doesn't draw anything
+                // negative inverts the canvas
+                updatedState.mainScaleFactor = newScale;
+            }
         }
     };
 
-    mainCanvas.addEventListener('mousewheel', handleScrollWheel);
-    mainCanvas.addEventListener('DOMMouseScroll', handleScrollWheel);
+    mainCanvas.addEventListener('mousewheel', zoomScrollWheel);
+    mainCanvas.addEventListener('DOMMouseScroll', zoomScrollWheel);
 }
 
 const calcCenterOfField = () => {
@@ -250,6 +267,12 @@ function update(delta) {
         mainMouseY.old = mainMouseY.new;
         mainOriginX += dx;
         mainOriginY += dy;
+        state.searchIsDirty = true;
+    }
+    if (updatedState.additionalPanX != 0) {
+        // additional amount of pan to apply
+        mainOriginX += updatedState.additionalPanX;
+        updatedState.additionalPanX = 0;
         state.searchIsDirty = true;
     }
 
