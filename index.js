@@ -59,7 +59,7 @@ let updatedState = {
     searchTarget: startingTarget,
     step: -1,
     mainScaleFactor: state.mainScaleFactor,
-    viewShouldCenter: false
+    viewShouldCenter: true
 };
 
 const getUserInput = (id, reset = false) => {
@@ -149,6 +149,10 @@ function init() {
         }
     });
 
+    document.getElementById('side-bar-center-view').addEventListener('click', () => {
+        updatedState.viewShouldCenter = true;
+    });
+
     // canvas event listeners
     mainCanvas.addEventListener('mousemove', (event) => {
         mainMouseX.new = event.clientX - mainCanvasBounds.left;
@@ -223,10 +227,6 @@ function update(delta) {
         state.statsAreDirty = true;
         state.searchIsDirty = true;
         calcCenterOfField();
-        if (updatedState.viewShouldCenter) {
-            centerViewOnField();
-            updatedState.viewShouldCenter = false;
-        }
     }
     if (state.searchTarget !== updatedState.searchTarget) {
         // search target has changed
@@ -272,6 +272,15 @@ function update(delta) {
         // set new state
         state.mainScaleFactor = newScale;
         state.searchIsDirty = true;
+    }
+
+    // recenter view
+    if (updatedState.viewShouldCenter) {
+        // this is last in updates
+        // if any pan or zoom events are queued up this will override
+        centerViewOnField();
+        state.searchIsDirty = true;
+        updatedState.viewShouldCenter = false;
     }
 }
 

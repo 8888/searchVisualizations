@@ -76,6 +76,11 @@
     line-height: 6em; /* vertical centering of text */
 }
 
+#side-bar-center-view {
+    grid-column-start: 1;
+    grid-column-end: 5;
+}
+
 .main-canvas-container {
     /* background: floralwhite; */
     grid-column-start: 2;
