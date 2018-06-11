@@ -44,7 +44,7 @@ const updateCanvasStyle = (ctx, params) => {
     ctx.textAlign = params.textAlign;
 };
 
-const drawStats = (ctx, target, height, nodes, step, styleParams) => {
+const drawStats = (ctx, target, height, nodes, step, root, min, max, styleParams) => {
     // draws the basic stats to the canvas
     ctx.font = (styleParams.fontSize * 1.5).toString() + 'px ' + styleParams.fontName;
     ctx.fillText(
@@ -53,19 +53,34 @@ const drawStats = (ctx, target, height, nodes, step, styleParams) => {
         styleParams.xMargin
     );
     ctx.fillText(
-        'Tree Height: ' + height,
+        'Current Search Step: ' + (step + 1),
         2,
         styleParams.xMargin * 2
     );
     ctx.fillText(
-        'Total Nodes: ' + nodes,
+        'Tree Height: ' + height,
         2,
         styleParams.xMargin * 3
     );
     ctx.fillText(
-        'Current Search Step: ' + (step + 1),
+        'Total Nodes: ' + nodes,
         2,
         styleParams.xMargin * 4
+    );
+    ctx.fillText(
+        'Root: ' + root,
+        2,
+        styleParams.xMargin * 5
+    );
+    ctx.fillText(
+        'Min: ' + min,
+        2,
+        styleParams.xMargin * 6
+    );
+    ctx.fillText(
+        'Max: ' + max,
+        2,
+        styleParams.xMargin * 7
     );
 };
 

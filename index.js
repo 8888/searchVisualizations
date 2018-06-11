@@ -319,6 +319,9 @@ function display() {
             bst.height(state.searchTree),
             state.searchField.length,
             state.step,
+            state.searchTree['k'],
+            state.searchField[0],
+            state.searchField[state.searchField.length - 1],
             defaultStyle
         );
         state.statsAreDirty = false;
