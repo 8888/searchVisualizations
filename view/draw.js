@@ -84,13 +84,13 @@ const drawStats = (ctx, target, height, nodes, step, root, min, max, styleParams
     );
 };
 
-const drawArrayField = (ctx, searchField, x, y, xSpacing, styleParams) => {
+const drawArrayField = (ctx, searchField, x, y, xSpacing, xMargin) => {
     // draw the search field in array form
     ctx.textAlign = 'center';
     for (let i = 0; i < searchField.length; i++) {
         ctx.fillText(
             searchField[i],
-            x + styleParams.xMargin + (i * xSpacing),
+            x + xMargin + (i * xSpacing),
             y
         );
     }
@@ -98,19 +98,19 @@ const drawArrayField = (ctx, searchField, x, y, xSpacing, styleParams) => {
 
 const _drawSearchPath = (
     ctx,
-    step,
     index,
+    xMargin,
     xSpacing,
     xOrigin,
     ySpacing,
     yOrigin,
     yEnd,
     correctPath,
-    styleParams
+    nodeRadius
 ) => {
     // draw single search path
     // searchPath is an array of indexes
-    const xEnd = styleParams.xMargin + index * xSpacing; // x of number
+    const xEnd = xMargin + index * xSpacing; // x of number
     // draw line path
     // horizontal
     ctx.strokeStyle = '#33cc33'; // green
@@ -128,11 +128,11 @@ const _drawSearchPath = (
     // vertical part 2
     ctx.beginPath();
     ctx.moveTo(xEnd, yOrigin + ySpacing);
-    ctx.lineTo(xEnd, yEnd - (styleParams.fontSize * 1.5)); // center is 1/2 fontSize and radius is fontSize
+    ctx.lineTo(xEnd, yEnd - (nodeRadius * 1.5)); // center is 1/2 radius
     ctx.stroke();
     // draw outline circle
     ctx.beginPath();
-    ctx.arc(xEnd, yEnd - (styleParams.fontSize/2), styleParams.fontSize, 0, 2 * Math.PI);
+    ctx.arc(xEnd, yEnd - (nodeRadius/2), nodeRadius, 0, 2 * Math.PI);
     // this centers the circle on the font
     ctx.stroke();
 };
@@ -143,16 +143,17 @@ const drawSearchPath = (
     searchTarget,
     path,
     step,
+    xMargin,
     xSpacing,
     ySpacing,
     yEnd,
-    styleParams
+    nodeRadius
 ) => {
     // public api to draw the array search paths
     for (let i = 0; i <= step; i++) {
         const correctPath = searchField[path[i]] == searchTarget;
         // sets x as the center of displayed number for this search path
-        const xOrigin = styleParams.xMargin + path[i - 1] * xSpacing;
+        const xOrigin = xMargin + path[i - 1] * xSpacing;
         // subtracting because lower y value is higher on grid
         // start at the top and work lower
         // yEnd is the center point of the numbers array
@@ -161,21 +162,22 @@ const drawSearchPath = (
         const yOrigin = yEnd - ((path.length - i) * ySpacing) - (ySpacing * .75);
         _drawSearchPath(
             ctx,
-            i,
             path[i],
+            xMargin,
             xSpacing,
             xOrigin,
             ySpacing,
             yOrigin,
             yEnd,
             correctPath,
-            styleParams
+            nodeRadius
         );
     }
 };
 
-const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height, styleParams) => {
+const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height, nodeRadius) => {
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     // draw current node
     ctx.fillText(tree.k, x, y);
     ctx.beginPath();
@@ -184,7 +186,7 @@ const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height,
         ctx.strokeStyle = '#0061ff'; // blue
         ctx.lineWidth = 4;
     }
-    ctx.arc(x, y, styleParams.fontSize, 0, 2 * Math.PI);
+    ctx.arc(x, y, nodeRadius, 0, 2 * Math.PI);
     ctx.stroke();
     // reset values
     ctx.strokeStyle = '#000000';
@@ -193,11 +195,11 @@ const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height,
     // then recursively draw lower nodes
     if (tree.l) {
         ctx.beginPath();
-        ctx.moveTo(x - styleParams.fontSize, y); // x - radius
+        ctx.moveTo(x - nodeRadius, y); // x - radius
         ctx.lineTo(
             // Math.pow(2, height) = number of nodes at this height
             x - (nodeSpacing * Math.pow(2, height)), // childX center
-            y + layerSpacing - styleParams.fontSize // childY - radius
+            y + layerSpacing - nodeRadius // childY - radius
         );
         ctx.stroke();
         drawBst(
@@ -210,15 +212,15 @@ const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height,
             nodeSpacing,
             layerSpacing,
             height - 1,
-            styleParams
+            nodeRadius
         );
     }
     if (tree.r) {
         ctx.beginPath();
-        ctx.moveTo(x + styleParams.fontSize, y); // x + radius
+        ctx.moveTo(x + nodeRadius, y); // x + radius
         ctx.lineTo(
             x + (nodeSpacing * Math.pow(2, height)), // childX center
-            y + layerSpacing - styleParams.fontSize // childY - radius
+            y + layerSpacing - nodeRadius // childY - radius
         );
         ctx.stroke();
         drawBst(
@@ -231,7 +233,7 @@ const drawBst = (ctx, tree, step, path, x, y, nodeSpacing, layerSpacing, height,
             nodeSpacing,
             layerSpacing,
             height - 1,
-            styleParams
+            nodeRadius
         );
     }
 };

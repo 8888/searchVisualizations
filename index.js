@@ -360,6 +360,10 @@ function display() {
 
         Draw.updateCanvasStyle(mainCtx, defaultStyle); // init defaults
 
+        // set node radius to fit largest number in field
+        const sampleText = mainCtx.measureText(state.searchField[state.searchField.length - 1]);
+        const nodeRadius = sampleText.width * 0.7;
+
         if (state.searchField.length) {
             Draw.drawArrayField(
                 mainCtx,
@@ -367,7 +371,7 @@ function display() {
                 defaultStyle.xSpacing['arrayStart'],
                 defaultStyle.ySpacing['arrayCenter'],
                 defaultStyle.xSpacing['arrayValues'],
-                defaultStyle
+                defaultStyle.xMargin
             );
             Draw.updateCanvasStyle(mainCtx, defaultStyle);
 
@@ -377,10 +381,11 @@ function display() {
                 state.searchTarget,
                 state.searchPath,
                 state.step,
+                defaultStyle.xMargin,
                 defaultStyle.xSpacing['arrayValues'],
                 defaultStyle.ySpacing['arraySearchPath'],
                 defaultStyle.ySpacing['arrayCenter'],
-                defaultStyle
+                nodeRadius
             );
             Draw.updateCanvasStyle(mainCtx, defaultStyle);
 
@@ -394,7 +399,7 @@ function display() {
                 defaultStyle.xSpacing['bstNode'],
                 defaultStyle.ySpacing['bstLayer'],
                 bst.height(state.searchTree),
-                defaultStyle
+                nodeRadius
             );
         }
         state.searchIsDirty = false;
