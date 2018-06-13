@@ -42,25 +42,23 @@
     background: wheat;
 }
 
-.new-tree-height {
+.new-tree-plus-minus {
     grid-column-start: 1;
-    grid-column-end: 5;
+    grid-column-end: 2;
     display: grid;
-    grid-template-columns: auto;
-    grid-auto-rows: inherit;
-}
-
-
-#new-tree-input {
-    margin-left: 0.25em;
-    width: 5em;
-    grid-column-start: 2;
-    grid-column-end: 3;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 0.5fr;
 }
 
 #new-tree-create {
-    grid-column-start: 1;
-    grid-column-end: 2;
+    grid-column-start: 2;
+    grid-column-end: 4;
+}
+
+#new-tree-input {
+    width: 90%;
+    grid-column-start: 4;
+    grid-column-end: 5;
 }
 
 #side-bar-file-drop {

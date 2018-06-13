@@ -41,6 +41,7 @@ const defaultStyle = Draw.styleParameters(
 
 // starting values
 const startingHeight = 3; // height of BST
+const heightLimits = {low: 0, high: 10}; // constraints limit creation of BSTs
 const startingInterval = 10; // max difference between two sequential values
 const startingField = bsa.generateSearchField(bst.nodesForHeight(startingHeight), startingInterval);
 const startingTarget = 88;
@@ -93,6 +94,12 @@ const handleFiles = (files) => {
     });
 };
 
+const generateNewField = (height) => {
+    updatedState.searchField = bsa.generateSearchField(bst.nodesForHeight(height), startingInterval);
+    updatedState.step = -1;
+    updatedState.viewShouldCenter = true;
+};
+
 function init() {
     // create event listeners
     document.getElementById('side-bar-step').addEventListener('click', () => {
@@ -141,12 +148,24 @@ function init() {
         handleFiles(event.dataTransfer.files);
     });
 
+    document.getElementById('new-tree-plus').addEventListener('click', () => {
+        const height = bst.height(state.searchTree);
+        if (height < heightLimits.high) {
+            generateNewField(height + 1);
+        }
+    });
+
+    document.getElementById('new-tree-minus').addEventListener('click', () => {
+        const height = bst.height(state.searchTree);
+        if (height > heightLimits.low) {
+            generateNewField(height - 1);
+        }
+    });
+
     document.getElementById('new-tree-create').addEventListener('click', () => {
-        const value = getUserInput('new-tree-input');
-        if (value <= 10 && value >= 0) {
-            updatedState.searchField = bsa.generateSearchField(bst.nodesForHeight(value), startingInterval);
-            updatedState.step = -1;
-            updatedState.viewShouldCenter = true;
+        const height = getUserInput('new-tree-input');
+        if (height <= heightLimits.high && height >= heightLimits.low) {
+            generateNewField(height);
         }
     });
 
