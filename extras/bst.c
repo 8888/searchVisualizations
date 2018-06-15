@@ -77,6 +77,34 @@ void insert(Node *node, int key, int value) {
     }
 }
 
+int *search(Node *tree, int key) {
+    // returns a pointer to the value if the key is found
+    // returns a NULL pointer if the key was not found
+    if (key == tree->key) {
+        return &tree->value;
+    } else if (key < tree->key) {
+        // move down the tree to the left
+        if (tree->left) {
+            // recursively search left tree
+            return search(tree->left, key);
+        } else {
+            // no left node
+            int *nptr = NULL;
+            return nptr;
+        }
+    } else {
+        // move down the tree to the right
+        if (tree->right) {
+            // recursively search right tree
+            return search(tree->right, key);
+        } else {
+            // no right node
+            int *nptr = NULL;
+            return nptr;
+        }
+    }
+}
+
 int main() {
     struct Node *bst = new_node(6, 6);
     
@@ -95,6 +123,13 @@ int main() {
     insert(bst, 12, 12);
 
     print_tree(bst);
+
+    int *value = search(bst, 8);
+    if (value) {
+        printf("Key was found with value: %d\n", *value);
+    } else {
+        printf("key not found!\n");
+    }
 
     return 0;
 }
