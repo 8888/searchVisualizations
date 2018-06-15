@@ -1,2 +1,5 @@
 # eslint
 .eslintrc.json
+
+# compiled C output
+a.out
