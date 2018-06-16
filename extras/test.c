@@ -57,11 +57,25 @@ static char * test_search() {
     return 0;
 }
 
+static char * test_find_min() {
+    struct Node *bst = create_tree_of_height_two();
+    mu_assert("X find_min(): Returns a pointer to the left most node", find_min(bst)->key == 1);
+    return 0;
+}
+
+static char * test_find_max() {
+    struct Node *bst = create_tree_of_height_two();
+    mu_assert("X find_max(): Returns a pointer to the right most node", find_max(bst)->key == 12);
+    return 0;
+}
+
 /* runner */
 static char * all_tests() {
     mu_run_test(test_new_node);
     mu_run_test(test_insert);
     mu_run_test(test_search);
+    mu_run_test(test_find_min);
+    mu_run_test(test_find_max);
     return 0;
 }
 

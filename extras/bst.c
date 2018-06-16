@@ -104,3 +104,23 @@ int *search(Node *tree, int key) {
         }
     }
 }
+
+Node *find_min(Node *tree) {
+    // returns a pointer to the node with the lowest key
+    // this will be the left most node
+    if (tree->left) {
+        return find_min(tree->left);
+    } else {
+        return tree;
+    }
+}
+
+Node *find_max(Node *tree) {
+    // returns a pointer to the node with the highest key
+    // this will be the right most node
+    if (tree->right) {
+        return find_max(tree->right);
+    } else {
+        return tree;
+    }
+}

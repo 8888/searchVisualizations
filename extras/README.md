@@ -63,6 +63,9 @@ Right child @ 0x0
 
 Search for the key 8:
 Key was found with value: 80
+
+The min node is key: 1 value: 10
+The max node is key: 12 value: 120
 ```
 Unit testing uses the [Min Unit test framework](http://www.jera.com/techinfo/jtns/jtn002.html). To run unit tests:
 ```shell

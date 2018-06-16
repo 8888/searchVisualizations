@@ -24,10 +24,15 @@ int main() {
     printf("Search for the key 8:\n");
     int *value = search(bst, 8);
     if (value) {
-        printf("Key was found with value: %d\n", *value);
+        printf("Key was found with value: %d\n\n", *value);
     } else {
         printf("key not found!\n");
     }
+
+    Node *min = find_min(bst);
+    printf("The min node is key: %d value: %d\n", min->key, min->value);
+    Node *max = find_max(bst);
+    printf("The max node is key: %d value: %d\n\n", max->key, max->value);
 
     return 0;
 }
