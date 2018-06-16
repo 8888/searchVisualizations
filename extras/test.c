@@ -30,6 +30,7 @@ static char * test_new_node() {
     mu_assert("X new_node(): Value should be set", bst->value == 60);
     mu_assert("X new_node(): Left inits as null pointer", bst->left == NULL);
     mu_assert("X new_node(): Right inits as null pointer", bst->right == NULL);
+    mu_assert("X new_node(): parent_to_self inits as null pointer", bst->parent_to_self == NULL);
     return 0;
 }
 
@@ -37,8 +38,10 @@ static char * test_insert() {
     struct Node *bst = new_node(6, 60);
     insert(bst, 2, 20);
     mu_assert("X insert(): Inserts into left", bst->left->key == 2);
+    mu_assert("X insert(): Includes parent's pointer to self (left)", bst->left->parent_to_self == &bst->left);
     insert(bst, 9, 90);
     mu_assert("X insert(): Inserts into right", bst->right->key == 9);
+    mu_assert("X insert(): Includes parent's pointer to self (right)", bst->right->parent_to_self == &bst->right);
     insert(bst, 1, 10);
     mu_assert("X insert(): Traverses down left, inserts into left", bst->left->left->key == 1);
     insert(bst, 4, 40);
@@ -52,7 +55,7 @@ static char * test_insert() {
 
 static char * test_search() {
     struct Node *bst = create_tree_of_height_two();
-    mu_assert("X search(): Returns pointer to value when key is found", *search(bst, 8) == 80);
+    mu_assert("X search(): Returns pointer to node when key is found", search(bst, 8)->value == 80);
     mu_assert("X search(): Returns null pointer when key is not found", search(bst, 5) == NULL);
     return 0;
 }
@@ -69,6 +72,17 @@ static char * test_find_max() {
     return 0;
 }
 
+static char * test_remove_node() {
+    struct Node *bst = create_tree_of_height_two();
+    remove_node(bst, 12);
+    mu_assert("X remove(): Remove a node with no children", bst->right->right == NULL);
+    remove_node(bst, 9);
+    mu_assert("X remove(): Remove a node with one child", bst->right->key == 8);
+    remove_node(bst, 2);
+    mu_assert("X remove(): Remove a node with two children", bst->left->key == 4);
+    return 0;
+}
+
 /* runner */
 static char * all_tests() {
     mu_run_test(test_new_node);
@@ -76,6 +90,7 @@ static char * all_tests() {
     mu_run_test(test_search);
     mu_run_test(test_find_min);
     mu_run_test(test_find_max);
+    mu_run_test(test_remove_node);
     return 0;
 }
 
