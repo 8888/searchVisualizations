@@ -142,18 +142,22 @@ void remove_node(Node *tree, int key) {
             // this node's parent will point to this node's right subtree's left most child
             Node *replacement = find_min(found_node->right);
             *found_node->parent_to_self = replacement;
+            free(found_node);
         } else if (found_node->left) {
             // node only has left child
             // this node's parent will point to this node's left child
             *found_node->parent_to_self = found_node->left;
+            free(found_node);
         } else if (found_node->right) {
             // node only has right child
             // this node's parent will point to this node's right child
             *found_node->parent_to_self = found_node->right;
+            free(found_node);
         } else {
             // node does not have any children
             // this node's parent will now have a null pointer
             *found_node->parent_to_self = NULL;
+            free(found_node);
         }
     }
 }
