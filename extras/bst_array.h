@@ -28,16 +28,20 @@ void init_array(BstArray *array, size_t height) {
     array->used = 0;
     array->size = nodes;
 }
-/*
-TODO: write tests and then update this function
+
 void insert_into_array(BstArray *array, int value) {
     if (array->used == array->size) {
         // array space is full
-        // currently just double the space
-        // need to change to adjust based on height
-        array->size *= 2;
+        // increase height by number of nodes in new row
+        // 2^new height = amount of space to increase by
+        array->height++;
+        array->size += (1 << array->height);
         array->array = (int *)realloc(array->array, array->size * sizeof(int));
     }
     array->array[array->used++] = value;
 }
-*/
+
+void free_array(BstArray *array) {
+    free(array->array);
+    array->size = 0;
+}
