@@ -82,7 +82,7 @@ static char * test_remove_node() {
     mu_assert("X remove(): Remove a node with two children", bst->left->key == 4);
     return 0;
 }
-
+ 
 /* runner */
 static char * all_tests() {
     mu_run_test(test_new_node);
