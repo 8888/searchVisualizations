@@ -37,8 +37,8 @@ int main() {
     printf("Traverse the values of the BST\n");
     BstArray arr = traverse(bst);
     printf("[ ");
-    for (int i; i <arr.used; i++) {
-        printf("%d ", arr.array[i]);
+    for (int i = 0; i < arr.length; i++) {
+        printf("{k: %d v: %d} ", arr.array[i].key, arr.array[i].value);
     }
     printf("]\n\n");
 

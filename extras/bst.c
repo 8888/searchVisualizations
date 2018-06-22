@@ -167,7 +167,7 @@ void _traverse(Node *tree, BstArray *arr) {
     // start with furthest left node and works right
     if (tree != NULL) { // furthest down
         _traverse(tree->left, arr);
-        insert_into_array(arr, tree->value);
+        insert_into_array(arr, tree->key, tree->value);
         _traverse(tree->right, arr);
     }
 }

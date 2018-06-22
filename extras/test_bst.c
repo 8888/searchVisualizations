@@ -86,13 +86,13 @@ static char * test_remove_node() {
 static char * test_traverse() {
     struct Node *bst = create_tree_of_height_two();
     BstArray arr = traverse(bst);
-    mu_assert("X traverse(): Lowest node is index 0", arr.array[0] == 10);
-    mu_assert("X traverse(): index 1", arr.array[1] == 20);
-    mu_assert("X traverse(): index 2", arr.array[2] == 40);
-    mu_assert("X traverse(): index 3", arr.array[3] == 60);
-    mu_assert("X traverse(): index 4", arr.array[4] == 80);
-    mu_assert("X traverse(): index 5", arr.array[5] == 90);
-    mu_assert("X traverse(): Highest node is index 6", arr.array[6] == 120);
+    mu_assert("X traverse(): Lowest node is index 0", arr.array[0].value == 10);
+    mu_assert("X traverse(): index 1", arr.array[1].value == 20);
+    mu_assert("X traverse(): index 2", arr.array[2].value == 40);
+    mu_assert("X traverse(): index 3", arr.array[3].value == 60);
+    mu_assert("X traverse(): index 4", arr.array[4].value == 80);
+    mu_assert("X traverse(): index 5", arr.array[5].value == 90);
+    mu_assert("X traverse(): Highest node is index 6", arr.array[6].value == 120);
     return 0;
 }
  

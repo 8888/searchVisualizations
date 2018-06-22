@@ -75,7 +75,7 @@ The min node is key: 1 value: 10
 The max node is key: 12 value: 120
 
 Traverse the values of the BST
-[ 20 40 60 80 90 120 ]
+[ {k: 1 v: 10} {k: 2 v: 20} {k: 4 v: 40} {k: 6 v: 60} {k: 8 v: 80} {k: 9 v: 90} {k: 12 v: 120} ]
 
 Now remove some nodes
 Remove 12, 9, 2, 1

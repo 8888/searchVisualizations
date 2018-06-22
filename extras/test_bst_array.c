@@ -36,42 +36,47 @@ static char * test_insert_into_array() {
     */
     BstArray arr;
     init_array(&arr, 0);
-    insert_into_array(&arr, 6);
+    insert_into_array(&arr, 6, 60);
     mu_assert("X insert_into_array(): Height 0",
-        arr.array[0] == 6 &&
+        arr.array[0].key == 6 &&
+        arr.array[0].value == 60 &&
         arr.height == 0 &&
-        arr.used == 1 &&
+        arr.length == 1 &&
         arr.size == 1
     );
-    insert_into_array(&arr, 2);
+    insert_into_array(&arr, 2, 20);
     mu_assert("X insert_into_array(): Height 1",
-        arr.array[1] == 2 &&
+        arr.array[1].key == 2 &&
+        arr.array[1].value == 20 &&
         arr.height == 1 &&
-        arr.used == 2 &&
+        arr.length == 2 &&
         arr.size == 3
     );
-    insert_into_array(&arr, 9);
-    insert_into_array(&arr, 1);
+    insert_into_array(&arr, 9, 90);
+    insert_into_array(&arr, 1, 10);
     mu_assert("X insert_into_array(): Height 2",
-        arr.array[3] == 1 &&
+        arr.array[3].key == 1 &&
+        arr.array[3].value == 10 &&
         arr.height == 2 &&
-        arr.used == 4 &&
+        arr.length == 4 &&
         arr.size == 7
     );
-    insert_into_array(&arr, 4);
-    insert_into_array(&arr, 8);
-    insert_into_array(&arr, 12);
+    insert_into_array(&arr, 4, 40);
+    insert_into_array(&arr, 8, 80);
+    insert_into_array(&arr, 12, 120);
     mu_assert("X insert_into_array(): Height 2 (full)",
-        arr.array[6] == 12 &&
+        arr.array[6].key == 12 &&
+        arr.array[6].value == 120 &&
         arr.height == 2 &&
-        arr.used == 7 &&
+        arr.length == 7 &&
         arr.size == 7
     );
-    insert_into_array(&arr, 15);
+    insert_into_array(&arr, 15, 150);
     mu_assert("X insert_into_array(): Height 3",
-        arr.array[7] == 15 &&
+        arr.array[7].key == 15 &&
+        arr.array[7].value == 150 &&
         arr.height == 3 &&
-        arr.used == 8 &&
+        arr.length == 8 &&
         arr.size == 15
     );
     return 0;
