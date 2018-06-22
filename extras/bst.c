@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "bst_array.h"
 
 typedef struct Node Node;
 
@@ -160,4 +161,23 @@ void remove_node(Node *tree, int key) {
             free(found_node);
         }
     }
+}
+
+void _traverse(Node *tree, BstArray *arr) {
+    // start with furthest left node and works right
+    if (tree != NULL) { // furthest down
+        _traverse(tree->left, arr);
+        insert_into_array(arr, tree->value);
+        _traverse(tree->right, arr);
+    }
+}
+
+BstArray traverse(Node *tree) {
+    // traverse the bst in order
+    // returns an ordered array of values
+    BstArray arr;
+    // currently hardcoded starting height
+    init_array(&arr, 2);
+    _traverse(tree, &arr);
+    return arr;
 }

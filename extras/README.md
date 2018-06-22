@@ -74,6 +74,9 @@ Key was found with value: 80
 The min node is key: 1 value: 10
 The max node is key: 12 value: 120
 
+Traverse the values of the BST
+[ 20 40 60 80 90 120 ]
+
 Now remove some nodes
 Remove 12, 9, 2, 1
 The tree is now:

@@ -34,6 +34,14 @@ int main() {
     Node *max = find_max(bst);
     printf("The max node is key: %d value: %d\n\n", max->key, max->value);
 
+    printf("Traverse the values of the BST\n");
+    BstArray arr = traverse(bst);
+    printf("[ ");
+    for (int i; i <arr.used; i++) {
+        printf("%d ", arr.array[i]);
+    }
+    printf("]\n\n");
+
     printf("Now remove some nodes\n");
     printf("Remove 12, 9, 2, 1\n");
     remove_node(bst, 12);
