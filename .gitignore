@@ -3,3 +3,6 @@
 
 # compiled C output
 a.out
+
+# editors
+.vscode/

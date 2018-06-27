@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "bst_array.h"
 
 typedef struct Node Node;
@@ -45,40 +46,43 @@ void print_tree(Node *node) {
     }
 }
 
-void insert(Node *node, int key, int value) {
+Node *insert(Node *node, int key, int value) {
     // insert a new node into a binary search tree
-    if (key == node->key) {
+    // when the node is null a pointer to a new node is returned
+    // when the a node exists, the pointer to the original node is returned
+    if (node == NULL) {
+        // node is empty
+        return new_node(key, value);
+    } else if (key == node->key) {
         // key exists
         // replace value
         node->value = value;
-        return;
+        return node;
     } else if (key < node->key) {
         // move down the tree to the left
         if (node->left) {
             // left node exists
             // use recurssion on left node
-            insert(node->left, key, value);
-            return;
+            return insert(node->left, key, value);
         } else {
             // left node does not exists
             struct Node *new = new_node(key, value);
             node->left = new;
             new->parent_to_self = &node->left;
-            return;
+            return node;
         }
     } else {
         // move down the tree to the right
         if (node->right) {
             // right node exists
             // use recussion on the right node
-            insert(node->right, key, value);
-            return;
+            return insert(node->right, key, value);
         } else {
             // right node does not exist
             struct Node *new = new_node(key, value);
             node->right = new;
             new->parent_to_self = &node->right;
-            return;
+            return node;
         }
     }
 }
@@ -180,4 +184,27 @@ BstArray traverse(Node *tree) {
     init_array(&arr, 2);
     _traverse(tree, &arr);
     return arr;
+}
+
+Node *_cfoa(BstArray *arr, int min, int max, Node **parent_to_self) {
+    // create_from_ordered_array
+    int mid = (int) round((min + max) / 2); // round returns a double, cast to an int
+    Node *node = new_node(arr->array[mid].key, arr->array[mid].value);
+    node->parent_to_self = parent_to_self;
+    if (mid - min > 0) {
+        node->left = _cfoa(arr, min, mid - 1, &node->left);
+    }
+    if (max - mid > 0) {
+        node->right = _cfoa(arr, mid + 1, max, &node->right);
+    }
+    return node;
+}
+
+Node *create_from_ordered_array(BstArray *arr) {
+    // creates a balanced BST
+    struct Node *tree = NULL;
+    int min = 0;
+    int max = arr->length - 1;
+    tree = _cfoa(arr, min, max, NULL);
+    return tree;
 }

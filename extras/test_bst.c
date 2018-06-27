@@ -23,6 +23,19 @@ static Node *create_tree_of_height_two() {
     return bst;
 }
 
+static BstArray create_array_of_height_two() {
+    BstArray arr;
+    init_array(&arr, 2);
+    insert_into_array(&arr, 1, 10);
+    insert_into_array(&arr, 2, 20);
+    insert_into_array(&arr, 4, 40);
+    insert_into_array(&arr, 6, 60);
+    insert_into_array(&arr, 8, 80);
+    insert_into_array(&arr, 9, 90);
+    insert_into_array(&arr, 12, 120);
+    return arr;
+}
+
 /* test cases */
 static char * test_new_node() {
     struct Node *bst = new_node(6, 60);
@@ -50,6 +63,16 @@ static char * test_insert() {
     mu_assert("X insert(): Traverses down right, inserts into left", bst->right->left->key == 8);
     insert(bst, 12, 120);
     mu_assert("X insert(): Traverses down right, inserts into right", bst->right->right->key == 12);
+    // empty tree receiving root node
+    struct Node *empty_tree = NULL;
+    empty_tree = insert(empty_tree, 1, 10);
+    mu_assert("X insert(): Insert into empty tree",
+        empty_tree->key == 1 &&
+        empty_tree->value == 10 &&
+        empty_tree->left == NULL &&
+        empty_tree->right == NULL &&
+        empty_tree->parent_to_self == NULL
+    );
     return 0;
 }
 
@@ -95,6 +118,19 @@ static char * test_traverse() {
     mu_assert("X traverse(): Highest node is index 6", arr.array[6].value == 120);
     return 0;
 }
+
+static char * test_create_from_ordered_array() {
+    BstArray arr = create_array_of_height_two();
+    struct Node *bst = create_from_ordered_array(&arr);
+    mu_assert("X create_from_ordered_array(): root", bst->key == 6);
+    mu_assert("X create_from_ordered_array(): left", bst->left->key == 2);
+    mu_assert("X create_from_ordered_array(): right", bst->right->key == 9);
+    mu_assert("X create_from_ordered_array(): left left", bst->left->left->key == 1);
+    mu_assert("X create_from_ordered_array(): left right", bst->left->right->key == 4);
+    mu_assert("X create_from_ordered_array(): right left", bst->right->left->key == 8);
+    mu_assert("X create_from_ordered_array(): right right", bst->right->right->key == 12);
+    return 0;
+}
  
 /* runner */
 static char * all_tests() {
@@ -105,6 +141,7 @@ static char * all_tests() {
     mu_run_test(test_find_max);
     mu_run_test(test_remove_node);
     mu_run_test(test_traverse);
+    mu_run_test(test_create_from_ordered_array);
     return 0;
 }
 
