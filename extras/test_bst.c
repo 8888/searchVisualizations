@@ -131,6 +131,41 @@ static char * test_create_from_ordered_array() {
     mu_assert("X create_from_ordered_array(): right right", bst->right->right->key == 12);
     return 0;
 }
+
+static char * test_balance() {
+    /*
+    unbalanced:
+           8
+         /   \
+        6     9
+       /       \
+      2        12
+     / \
+    1   4
+    balanced:
+         6
+       /   \
+      2     9
+     / \   / \
+    1   4 8  12
+    */
+    struct Node *bst = new_node(8, 80);
+    insert(bst, 6, 60);
+    insert(bst, 9, 90);
+    insert(bst, 2, 20);
+    insert(bst, 12, 120);
+    insert(bst, 1, 10);
+    insert(bst, 4, 40);
+    Node *bbst = balance(bst);
+    mu_assert("X balance(): root", bbst->key == 6);
+    mu_assert("X balance(): left", bbst->left->key == 2);
+    mu_assert("X balance(): right", bbst->right->key == 9);
+    mu_assert("X balance(): left left", bbst->left->left->key == 1);
+    mu_assert("X balance(): left right", bbst->left->right->key == 4);
+    mu_assert("X balance(): right left", bbst->right->left->key == 8);
+    mu_assert("X balance(): right right", bbst->right->right->key == 12);
+    return 0;
+}
  
 /* runner */
 static char * all_tests() {
@@ -142,6 +177,7 @@ static char * all_tests() {
     mu_run_test(test_remove_node);
     mu_run_test(test_traverse);
     mu_run_test(test_create_from_ordered_array);
+    mu_run_test(test_balance);
     return 0;
 }
 

@@ -208,3 +208,11 @@ Node *create_from_ordered_array(BstArray *arr) {
     tree = _cfoa(arr, min, max, NULL);
     return tree;
 }
+
+Node *balance(Node *tree) {
+    // wrapper around traverse and cfoa
+    // takes a BST and returns a balanced BST
+    BstArray arr = traverse(tree);
+    Node *balanced = create_from_ordered_array(&arr);
+    return balanced;
+}
