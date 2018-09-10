@@ -174,8 +174,8 @@ function init() {
     });
 
     const panScrollWheel = (event) => {
-        // shift + scroll wheel anywhere in the DOM will pan mainCanvas
-        if (event.shiftKey) {
+        // alt + scroll wheel anywhere in the DOM will pan mainCanvas
+        if (event.altKey && !event.ctrlKey) {
             // event.deltaY = 100 for wheel down (pan right)
             // event.deltaY = -100 for wheel up (pan left)
             // to pan right, the origin must move left, or decrease its x value
@@ -213,8 +213,10 @@ function init() {
         // scale factor should be -0.1 for zoom in (using -100)
         // 1 - (100 * .001) = 0.9 (zoom out -> everything is drawn at 0.9x size)
         // 1 - (-100 * .001) = 1.1 (zoom in -> everything is drawn at 1.1x size)
-        if (!event.shiftKey) {
-            // if shift key is pressed, this is handled elsewhere for pan
+        if (!event.altKey && event.ctrlKey) {
+            // if alt key is pressed, this is handled elsewhere for pan
+            // alt is used to zoom on canvas until the canvases are resized properly
+            event.preventDefault(); // window zoom
             const scaleFactor = (event.deltaY * .001); // current change
             const newScale = updatedState.mainScaleFactor - scaleFactor;
             if (newScale > 0.1 && newScale < 3) {
