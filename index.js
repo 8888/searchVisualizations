@@ -9,9 +9,6 @@ const sideCanvas = document.getElementById('sideCanvasElement');
 mainCanvas.tabIndex = 0;
 mainCanvas.focus();
 // mainCanvas parameters
-const mainCanvasWidth = mainCanvas.width;
-const mainCanvasHeight = mainCanvas.height;
-const mainCanvasBounds = mainCanvas.getBoundingClientRect();
 const mainCtx = mainCanvas.getContext('2d');
 let mainMouseX = {old: null, new: null};
 let mainMouseY = {old: null, new: null};
@@ -22,7 +19,6 @@ let mainScaleFactor = 1;
 // sideCanvas parameters
 const sideCanvasWidth = sideCanvas.width;
 const sideCanvasHeight = sideCanvas.height;
-const sideCanvasBounds = sideCanvas.getBoundingClientRect();
 const sideCtx = sideCanvas.getContext('2d');
 
 // drawing sizes
@@ -100,7 +96,36 @@ const generateNewField = (height) => {
     updatedState.viewShouldCenter = true;
 };
 
+const handleResize = () => {
+    // resize the main canvas to the full screen size
+    mainCanvas.width = window.innerWidth;
+    mainCanvas.height = window.innerHeight;
+    // the canvas is cleared when the size changes, a redraw is needed
+    state.searchIsDirty = true;
+};
+
 function init() {
+    // init canvas size
+    handleResize();
+
+    // resize event listener should be throttled as it calls quickly
+    (function() {
+        const createThrottledEvent = (type, name) => {
+            let running = false;
+            const throttle = () => {
+                if (running) { return; }
+                running = true;
+                requestAnimationFrame(() => {
+                    window.dispatchEvent(new CustomEvent(name));
+                    running = false;
+                });
+            };
+            window.addEventListener(type, throttle);
+        };
+        createThrottledEvent('resize', 'throttledResize');
+    })();
+    window.addEventListener('throttledResize', handleResize);
+
     // create event listeners
     document.getElementById('side-bar-step').addEventListener('click', () => {
         if (state.step < state.searchPath.length - 1) {
@@ -188,12 +213,14 @@ function init() {
 
     // canvas event listeners
     mainCanvas.addEventListener('mousemove', (event) => {
+        const mainCanvasBounds = mainCanvas.getBoundingClientRect();
         mainMouseX.new = event.clientX - mainCanvasBounds.left;
         mainMouseY.new = event.clientY - mainCanvasBounds.top;
     });
 
     mainCanvas.addEventListener('mousedown', (event) => {
         if (event.button === 0) { // left click
+            const mainCanvasBounds = mainCanvas.getBoundingClientRect();
             mainMouseDrag = true;
             mainMouseX.old = event.clientX - mainCanvasBounds.left;
             mainMouseY.old = event.clientY - mainCanvasBounds.top;
@@ -245,8 +272,8 @@ const calcCenterOfField = () => {
 const centerViewOnField = () => {
     // when creating a new field, recenter the view
     // screenCenter - arrayCenter = distance to move origin
-    const dx = (mainCanvasWidth / 2) - defaultStyle.xSpacing['arrayCenter'];
-    const dy = (mainCanvasHeight / 2) - defaultStyle.ySpacing['arrayCenter'];
+    const dx = (mainCanvas.width / 2) - defaultStyle.xSpacing['arrayCenter'];
+    const dy = (mainCanvas.height / 2) - defaultStyle.ySpacing['arrayCenter'];
     // reset zoom scale
     updatedState.mainScaleFactor = 1;
     state.mainScaleFactor = 1;
@@ -353,7 +380,7 @@ function display() {
         // clear entire canvase, even if transformed
         mainCtx.save();
         mainCtx.setTransform(1, 0, 0, 1, 0, 0);
-        mainCtx.clearRect(0, 0, mainCanvasWidth, mainCanvasHeight);
+        mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
         mainCtx.restore();
 
         mainCtx.save(); // save origin before pan and zoom

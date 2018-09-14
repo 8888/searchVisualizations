@@ -6,10 +6,7 @@
         <link rel="stylesheet" type="text/css" href="index.css">
     </head>
     <body>
-        <div class="grid-container">
-            <div class="top-bar">
-                <p>Binary Search Visualizations</p>
-            </div>
+        <div class="canvas-container">
             <div class="side-bar">
                 <input id="side-bar-input" type="number">
                 <button id="side-bar-step" type="button">step</button>
@@ -21,8 +18,7 @@
                         id="sideCanvasElement"
                         width="215"
                         height="425"
-                        oncontextmenu="return false;"
-                        style="outline: none;">
+                        oncontextmenu="return false;">
                     </canvas>
                 </div>
                 <div class="new-tree-title">Create a new tree</div>
@@ -38,13 +34,8 @@
             <div class="main-canvas-container">
                 <canvas
                     id="mainCanvasElement"
-                    width="875"
-                    height="720"
                     oncontextmenu="return false;">
                 </canvas>
-            </div>
-            <div class="bottom-bar">
-                <p>alt + mousewheel to zoom, crl + mousewheel or click and drag to pan</p>
             </div>
         </div>
         <script type="module" src="index.js"></script>
