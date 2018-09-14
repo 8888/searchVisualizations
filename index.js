@@ -104,6 +104,14 @@ const handleResize = () => {
     state.searchIsDirty = true;
 };
 
+const onStepClick = () => {
+    if (state.step < state.searchPath.length - 1) {
+        updatedState.step += 1;
+    } else {
+        updatedState.step = -1;
+    }
+};
+
 function init() {
     // init canvas size
     handleResize();
@@ -127,12 +135,9 @@ function init() {
     window.addEventListener('throttledResize', handleResize);
 
     // create event listeners
-    document.getElementById('side-bar-step').addEventListener('click', () => {
-        if (state.step < state.searchPath.length - 1) {
-            updatedState.step += 1;
-        } else {
-            updatedState.step = -1;
-        }
+    document.getElementById('side-bar-step').addEventListener('click', onStepClick);
+    document.addEventListener('keypress', () => {
+        if (event.key === 'Enter' || event.key === ' ') { onStepClick(); } // enter or spacebar
     });
 
     document.getElementById('side-bar-search-target').addEventListener('click', () => {
@@ -199,8 +204,8 @@ function init() {
     });
 
     const panScrollWheel = (event) => {
-        // alt + scroll wheel anywhere in the DOM will pan mainCanvas
-        if (event.altKey && !event.ctrlKey) {
+        // shift + scroll wheel anywhere in the DOM will pan mainCanvas
+        if (event.shiftKey) {
             // event.deltaY = 100 for wheel down (pan right)
             // event.deltaY = -100 for wheel up (pan left)
             // to pan right, the origin must move left, or decrease its x value
@@ -240,9 +245,8 @@ function init() {
         // scale factor should be -0.1 for zoom in (using -100)
         // 1 - (100 * .001) = 0.9 (zoom out -> everything is drawn at 0.9x size)
         // 1 - (-100 * .001) = 1.1 (zoom in -> everything is drawn at 1.1x size)
-        if (!event.altKey && event.ctrlKey) {
-            // if alt key is pressed, this is handled elsewhere for pan
-            // alt is used to zoom on canvas until the canvases are resized properly
+        if (!event.shiftKey) {
+            // if shift is pressed, this is handled elsewhere for pan
             event.preventDefault(); // window zoom
             const scaleFactor = (event.deltaY * .001); // current change
             const newScale = updatedState.mainScaleFactor - scaleFactor;
