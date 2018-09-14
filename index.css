@@ -40,7 +40,8 @@ html, body {
     grid-column-end: 5;
     border-top: 1px solid gray;
     text-align: center;
-    background: wheat;
+    background: rgb(224, 224, 224); /* darker than ghostwhite */
+    margin-top: 10px;
 }
 
 .new-tree-plus-minus {

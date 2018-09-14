@@ -102,6 +102,12 @@ const handleResize = () => {
     mainCanvas.height = window.innerHeight;
     // the canvas is cleared when the size changes, a redraw is needed
     state.searchIsDirty = true;
+
+    // resize the side canvas to reach the bottom of the screen
+    const sideCanvasBoundingRect = sideCanvas.getBoundingClientRect();
+    sideCanvas.height = window.innerHeight - sideCanvasBoundingRect.top;
+    // the canvas is cleared when the size changes, a redraw is needed
+    state.statsAreDirty = true;
 };
 
 const onStepClick = () => {
