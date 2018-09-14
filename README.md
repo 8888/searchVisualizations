@@ -1,6 +1,7 @@
 # Search Visualizations
 Visualizations of common computer science search algorithms. Searches are shown using HTML5 canvas elements and logic is in JavaScript.  
-[The visualizations can be seen here](https://betterin30days.github.io/searchVisualizations/)
+[The visualizations can be seen here](https://betterin30days.github.io/searchVisualizations/)  
+<img src="https://github.com/betterin30days/searchVisualizations/blob/master/assets/screenshot.PNG"><br>
 
 # Local Development
 ES6 modules are used to import/export code and most modern browsers now support this without the use of any bundling library. Since local development runs into CORS issues when trying to import from the file system, local files need to be served by a simple web server.
