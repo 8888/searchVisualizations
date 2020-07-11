@@ -1,6 +1,6 @@
 # Search Visualizations
 Visualizations of common computer science search algorithms. Searches are shown using HTML5 canvas elements and logic is in JavaScript.  
-[The visualizations can be seen here](https://betterin30days.github.io/searchVisualizations/)  
+[The visualizations can be seen here](https://8888.github.io/searchVisualizations/)  
 <img src="https://github.com/betterin30days/searchVisualizations/blob/master/assets/screenshot.PNG"><br>
 
 # Local Development
