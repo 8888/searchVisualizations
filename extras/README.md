@@ -5,7 +5,7 @@ These are not currently used in the core project, but included as they fit the s
 Binary Search Tree algorithms written in C. A tree data type is defined by a Node struct containing a key, value, pointers to a left and right child Node struct, and a pointer to its parent's pointer that is pointing at this node. To demo all of the available methods:
 ```shell
 $ gcc e2e.c
-$ gcc ./a.out
+$ ./a.out
 ```
 
 Tree:
