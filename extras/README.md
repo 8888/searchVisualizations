@@ -103,6 +103,9 @@ Parents pointer to self: 0x7ff7215000b8
 ```
 Unit testing uses the [Min Unit test framework](http://www.jera.com/techinfo/jtns/jtn002.html). To run unit tests:
 ```shell
-$ gcc test.c
-$ ./a.out
+bst.c
+$ gcc test_bst.c -o test_bst.out && ./test_bst.out
+
+bst_array.h
+$ gcc test_bst_array.c -o test_bst_array.out && ./test_bst_array.out
 ```

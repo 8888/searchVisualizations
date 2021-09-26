@@ -2,7 +2,7 @@
 .eslintrc.json
 
 # compiled C output
-a.out
+*.out
 
 # editors
 .vscode/
